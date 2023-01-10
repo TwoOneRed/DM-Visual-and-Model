@@ -73,16 +73,17 @@ st.dataframe(sm.stats.anova_lm(model, typ=2))
 #height = st.sidebar.slider("plot height", 1, 25, 1)
 
 #QUESTION 3
-st.header('Question 3')
-st.subheader('Any correlations between weather information and number of people buying drinks?')
+
+#st.header('Question 3')
+#st.subheader('Any correlations between weather information and number of people buying drinks?')
 
 
-q3 = df[['temp', 'humidity', 'windspeed','cloudcover', 'visibility', 'buyDrink']].reset_index(drop=True)
+#q3 = df[['temp', 'humidity', 'windspeed','cloudcover', 'visibility', 'buyDrink']].reset_index(drop=True)
 
-q3plt = plt.figure(figsize=(7,5))
-ax = sns.pairplot(q3, hue ='buyDrink')
+#q3plt = plt.figure(figsize=(7,5))
+#ax = sns.pairplot(q3, hue ='buyDrink')
 
-st.pyplot(q3plt)
+#st.pyplot(q3plt)
 
 #QUESTION 4
 st.header('Question 4')
