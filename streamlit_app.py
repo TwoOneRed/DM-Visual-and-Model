@@ -9,7 +9,7 @@ st.text('1191100280  Alvin Fong Weng Yew')
 st.text('1191100281  Tan Sin Zhung')
 st.text('1191100292  Leong Yi Hong')
 
-st.title('Cleaned Datasets')
+st.header('Cleaned Datasets')
 df = pd.read_csv('Data_Cleaned.csv')
 st.dataframe(df)
 #st.write(df['Date'])
