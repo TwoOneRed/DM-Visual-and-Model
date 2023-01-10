@@ -1,7 +1,9 @@
 import streamlit as st
 import pandas as pd
 
-import matplotlib.pyplab as plt
+import seaborn as sns
+import matplotlib.pyplot as plt
+
 
 st.title('Data Mining Project')
 st.text('1191100280  Alvin Fong Weng Yew')
