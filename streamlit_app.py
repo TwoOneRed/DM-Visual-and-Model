@@ -51,7 +51,7 @@ q2 = q2.groupby(['Basket_Size','With_Kids']).sum('buyDrink').round(2).reset_inde
 #############################################################################
 #1 Chart
 
-q2plt = plt.figure(figsize=(6,6))
+q2plt = plt.figure(figsize=(7,5))
 ax = sns.barplot(x='Basket_Size', y='buyDrink', hue='With_Kids', data=q2)
 
 for i in ax.containers:
@@ -79,7 +79,7 @@ st.subheader('Any correlations between weather information and number of people 
 
 q3 = df[['temp', 'humidity', 'windspeed','cloudcover', 'visibility', 'buyDrink']].reset_index(drop=True)
 
-q3plt = plt.figure(figsize=(9,7))
+q3plt = plt.figure(figsize=(7,5))
 ax = sns.pairplot(q3, hue ='buyDrink')
 plt.show()
 
