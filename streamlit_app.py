@@ -51,7 +51,7 @@ q2 = q2.groupby(['Basket_Size','With_Kids']).sum('buyDrink').round(2).reset_inde
 #############################################################################
 #1 Chart
 
-q2plt = plt.figure(figsize=(9,7))
+q2plt = plt.figure(figsize=(6,6))
 ax = sns.barplot(x='Basket_Size', y='buyDrink', hue='With_Kids', data=q2)
 
 for i in ax.containers:
