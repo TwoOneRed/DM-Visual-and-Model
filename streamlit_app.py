@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 
-st.title('Data Mining Project)
+st.title('Data Mining Project')
 st.text('1191100280  Alvin Fong Weng Yew')
 st.text('1191100281  Tan Sin Zhung')
 st.text('1191100292  Leong Yi Hong')
