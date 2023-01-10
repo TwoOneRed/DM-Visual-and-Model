@@ -21,7 +21,10 @@ q1 = df[['Race','buyDrink']]
 
 q1 = q1.groupby('Race').sum('buyDrink').reset_index()
 
-q1plt = plt.figure(figsize=(1,1))
+width = st.sidebar.slider("plot width", 1, 25, 3)
+height = st.sidebar.slider("plot height", 1, 25, 1)
+
+q1plt = plt.figure(figsize=(8,8))
 ax = sns.barplot(x='Race', y='buyDrink', data=q1)
 for i in ax.containers:
     ax.bar_label(i,)
