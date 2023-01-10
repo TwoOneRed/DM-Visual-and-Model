@@ -34,3 +34,4 @@ plt.xlabel('Race')
 plt.ylabel('Money Spent')
          
 st.pyplot(q1plt)
+ttt
