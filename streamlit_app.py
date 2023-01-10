@@ -23,8 +23,10 @@ indian = q1[q1['Race']=='indian']['TotalSpent_RM']
 chinese = q1[q1['Race']=='chinese']['TotalSpent_RM']
 
 q1 = [malay, indian, chinese]
-q1plt =plt.boxplot(q1,labels=['Malay','Indian','Chinese'])
-q1plt = plt.xlabel('Race')
-q1plt = plt.ylabel('Money Spent')
+q1plt = plt.figure(figsize = (10,10))
+
+plt.boxplot(q1,labels=['Malay','Indian','Chinese'])
+plt.xlabel('Race')
+plt.ylabel('Money Spent')
          
 st.pyplot(q1plt)
