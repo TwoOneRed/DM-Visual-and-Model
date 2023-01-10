@@ -3,4 +3,5 @@ import pandas as pd
 
 df = pd.read_csv('Data_Cleaned.csv')
 
-st.write(df[0])
+st.dataframe(df)
+#st.write(df['Date'])
