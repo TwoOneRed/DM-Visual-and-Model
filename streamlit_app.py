@@ -57,7 +57,7 @@ ax = sns.barplot(x='Basket_Size', y='buyDrink', hue='With_Kids', data=q2)
 for i in ax.containers:
     ax.bar_label(i,)
 
-st.pyplot(q1plt)
+st.pyplot(q2plt)
 #############################################################################
 
 #2 Statistical Test
@@ -71,3 +71,16 @@ st.dataframe(sm.stats.anova_lm(model, typ=2))
 
 #width = st.sidebar.slider("plot width", 1, 25, 3)
 #height = st.sidebar.slider("plot height", 1, 25, 1)
+
+#QUESTION 3
+st.header('Question 3')
+st.subheader('Any correlations between weather information and number of people buying drinks?')
+
+
+q3 = df[['temp', 'humidity', 'windspeed','cloudcover', 'visibility', 'buyDrink']].reset_index(drop=True)
+
+q3plt = plt.figure(figsize=(9,7))
+ax = sns.pairplot(q3, hue ='buyDrink')
+plt.show()
+
+st.pyplot(q3plt)
