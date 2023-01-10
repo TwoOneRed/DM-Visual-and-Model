@@ -103,5 +103,4 @@ ax = sns.barplot(x='Age Group', y='TotalSpent_RM', data=q4)
 for i in ax.containers:
     ax.bar_label(i,)
 
-ax = sns.pairplot(q3, hue ='buyDrink')
 st.pyplot(q4plt)
