@@ -9,7 +9,7 @@ df = pd.read_csv('Data_Cleaned.csv')
 
 st.title('Data Mining Project')
 st.header('Member')
-member = pd.DataFrame({"ID":['1191100280','1191100281','1191100292'],"Name":['Alvin Fong Weng Yew','Tan Sin Zhung','Leong Yi Hong']})
+member = pd.DataFrame({"ID":['1191100280','1191100281','1191100292'],"Name":['Alvin Fong Weng Yew','Tan Sin Zhung','Leong Yi Hong'], "Phone Number":['011-2029 5617','011-366 1060','011-7289 2995']})
 st.dataframe(member)
 
 st.header('Cleaned Datasets')
