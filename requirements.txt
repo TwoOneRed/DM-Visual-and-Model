@@ -1,3 +1,4 @@
 pip==22.3.1
 matplotlib==3.5.2
-seaborn==0.12.2 
+seaborn==0.12.2
+statsmodel==0.13.2
