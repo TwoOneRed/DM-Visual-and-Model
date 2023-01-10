@@ -21,12 +21,42 @@ q1 = df[['Race','buyDrink']]
 
 q1 = q1.groupby('Race').sum('buyDrink').reset_index()
 
-width = st.sidebar.slider("plot width", 1, 25, 3)
-height = st.sidebar.slider("plot height", 1, 25, 1)
-
-q1plt = plt.figure(figsize=(width,height))
+q1plt = plt.figure(figsize=(10,4))
 ax = sns.barplot(x='Race', y='buyDrink', data=q1)
 for i in ax.containers:
     ax.bar_label(i,)
 
 st.pyplot(q1plt)
+
+
+#QUESTION 2
+st.header('Question 2')
+st.subheader('Do basket size and family with kids influence the number of people buying drinks?')
+
+q2 = df[['Basket_Size', 'With_Kids', 'buyDrink']]
+
+# Finding mean Monthly Family Expenses for each LifeStyle and Education
+q2 = q2.groupby(['Basket_Size','With_Kids']).sum('buyDrink').round(2).reset_index()
+
+#############################################################################
+#1 Chart
+
+plt.figure(figsize=(9,7))
+ax = sns.barplot(x='Basket_Size', y='buyDrink', hue='With_Kids', data=q2)
+
+for i in ax.containers:
+    ax.bar_label(i,)
+#############################################################################
+
+#2 Statistical Test
+# Get required data
+q2 = df[['Basket_Size', 'With_Kids', 'buyDrink']]
+
+# Two Way ANOVA for statistical test
+model = ols('buyDrink ~ C(Basket_Size) + C(With_Kids) + C(Basket_Size):C(With_Kids)', data=q2).fit()
+
+sm.stats.anova_lm(model, typ=2)
+
+
+#width = st.sidebar.slider("plot width", 1, 25, 3)
+#height = st.sidebar.slider("plot height", 1, 25, 1)
