@@ -15,7 +15,8 @@ st.dataframe(df)
 #st.write(df['Date'])
 
 #QUESTION 1
-st.text('Question 1: Is there a significant difference between Race (Malay, Indian, Chinese, Foreigner) and the sales of drink in the laundry store?')
+st.header('Question 1')
+st.subheader('Is there a significant difference between Race (Malay, Indian, Chinese, Foreigner) and the sales of drink in the laundry store?')
          
 q1 = df[['Race','TotalSpent_RM']]
 q1 = q1.dropna()
