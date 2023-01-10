@@ -43,11 +43,13 @@ q2 = q2.groupby(['Basket_Size','With_Kids']).sum('buyDrink').round(2).reset_inde
 #############################################################################
 #1 Chart
 
-plt.figure(figsize=(9,7))
+q2plt = plt.figure(figsize=(9,7))
 ax = sns.barplot(x='Basket_Size', y='buyDrink', hue='With_Kids', data=q2)
 
 for i in ax.containers:
     ax.bar_label(i,)
+
+st.pyplot(q1plt)
 #############################################################################
 
 #2 Statistical Test
@@ -57,8 +59,7 @@ q2 = df[['Basket_Size', 'With_Kids', 'buyDrink']]
 # Two Way ANOVA for statistical test
 model = ols('buyDrink ~ C(Basket_Size) + C(With_Kids) + C(Basket_Size):C(With_Kids)', data=q2).fit()
 
-sm.stats.anova_lm(model, typ=2)
-
+st.dataframe(sm.stats.anova_lm(model, typ=2))
 
 #width = st.sidebar.slider("plot width", 1, 25, 3)
 #height = st.sidebar.slider("plot height", 1, 25, 1)
