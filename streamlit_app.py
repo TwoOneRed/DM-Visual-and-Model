@@ -6,11 +6,19 @@ from statsmodels.formula.api import ols
 import statsmodels.api as sm
 
 df = pd.read_csv('Data_Cleaned.csv')
+dataset = pd.read_csv('laundry.csv')
+weather = pd.read_csv('weather.csv')
 
 st.title('Data Mining Project')
 st.header('Member')
 member = pd.DataFrame({"ID":['1191100280','1191100281','1191100292'],"Name":['Alvin Fong Weng Yew','Tan Sin Zhung','Leong Yi Hong'], "Phone Number":['011-2029 5617','011-366 1060','011-7289 2995']})
 st.dataframe(member)
+
+st.header('Laundry Datasets')
+st.dataframe(dataset)
+
+st.header('Weather Datasets')
+st.dataframe(weather)
 
 st.header('Cleaned Datasets')
 st.dataframe(df)
