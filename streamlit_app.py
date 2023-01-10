@@ -7,10 +7,8 @@ import statsmodels.api as sm
 
 df = pd.read_csv('Data_Cleaned.csv')
 
-st.title('Data Mining Project')
-st.text('1191100280  Alvin Fong Weng Yew')
-st.text('1191100281  Tan Sin Zhung')
-st.text('1191100292  Leong Yi Hong')
+member = pd.DataFrame({"ID":['1191100280','1191100281','1191100292'],"Name":['Alvin Fong Weng Yew','Tan Sin Zhung','Leong Yi Hong']})
+st.dataframe(member)
 
 st.header('Cleaned Datasets')
 st.dataframe(df)
