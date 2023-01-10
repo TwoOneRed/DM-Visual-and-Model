@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 
-!pip install matplotlib
 import matplotlib.pyplab as plt
 
 st.title('Data Mining Project')
