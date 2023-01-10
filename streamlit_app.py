@@ -81,6 +81,26 @@ q3 = df[['temp', 'humidity', 'windspeed','cloudcover', 'visibility', 'buyDrink']
 
 q3plt = plt.figure(figsize=(7,5))
 ax = sns.pairplot(q3, hue ='buyDrink')
-plt.show()
 
 st.pyplot(q3plt)
+
+#QUESTION 4
+st.header('Question 4')
+st.subheader('Are there difference in average total spent (RM) in laundry shops between each of the age groups?')
+
+q4 = df[['Age_Range','TotalSpent_RM']]
+
+bins = [10, 20, 30, 40, 50, 60]
+labels = ['10-20', '21-30', '31-40', '41-50', '51-60']
+q4['Age Group'] = pd.cut(q4['Age_Range'], bins=bins, labels=labels)
+
+q4 = q4.groupby('Age Group').mean('TotalSpent_RM').reset_index()
+
+q4plt = plt.figure(figsize = (10,5))
+plt.title('Average Total Spent in RM for different groups')
+ax = sns.barplot(x='Age Group', y='TotalSpent_RM', data=q4)
+for i in ax.containers:
+    ax.bar_label(i,)
+
+ax = sns.pairplot(q3, hue ='buyDrink')
+st.pyplot(q4plt)
