@@ -1,5 +1,6 @@
 import streamlit as st
+import pandas as pd
 
-st.title('🎈 App Name')
+df = pd.read_csv('Data_Cleaned.csv')
 
-st.write('Hello world!')
+st.write(df[0])
