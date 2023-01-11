@@ -218,8 +218,57 @@ plt.bar(rfe_score.tail(10)['Features'], rfe_score.tail(10)['Score'])
 st.pyplot(rfebot10)
 st.dataframe(rfe_score.tail(10))
 
+
 st.subheader('Feature Comparison')
 
+feature_list = ['boruta', 'rfe']
+feature_num, acc_rfe, acc_boruta =[],[],[]
+
+for i in range(1, 20):
+    feature_num.append(i)
+    for feature in feature_list:
+        
+        # Create X and y dataset
+        y = df_encode['buyDrink']
+        X = df_encode.drop('buyDrink', axis = 1)
+        
+        clf = GaussianNB()
+  
+        if feature == 'boruta':
+            cols = boruta_score.Features[0:i]
+            X = X[cols].copy()
+
+            # Split data
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, stratify = y)
+
+            clf.fit(X_train, y_train)
+            y_pred = clf.predict(X_test)
+
+            acc = round((accuracy_score(y_test, y_pred)*100), 2)
+            acc_boruta.append(acc)
+
+        elif feature == 'rfe':
+            cols = rfe_score.Features[0:i]
+            X = X[cols].copy()
+            
+            # Split data
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, stratify = y)
+
+            clf.fit(X_train, y_train)
+            y_pred = clf.predict(X_test)
+
+            acc = round((accuracy_score(y_test, y_pred)*100), 2)
+            acc_rfe.append(acc)
+            
+boruta_acc_result = pd.DataFrame(list(zip(feature_num,acc_boruta, acc_rfe)),columns = ["No_Of_Features","BORUTA","RFE"])
+boruta_acc_result = pd.melt(boruta_acc_result, id_vars = "No_Of_Features",var_name = "Model", value_name = "Accuracy")
+
+# Plot the line charts
+feacomp = sns.set(rc={'figure.figsize':(11.7,8.27)})
+ax = sns.lineplot(x = "No_Of_Features", y = "Accuracy", hue = "Model", data = boruta_acc_result)
+ax.set(ylim=(0, 100))
+ax.set(title="Accuracy Trend for Different Feature Selections")
+st.pyplot(feacomp)
 
 st.header('PART 3 Model Construction and Comparison')
 st.subheader('Classification For Naive Bayes')
