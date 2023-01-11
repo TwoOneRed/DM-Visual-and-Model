@@ -5,3 +5,4 @@ statsmodels==0.13.2
 scikit-learn==1.0.2
 boruta==0.3
 xgboost==1.7.2
+numpy==1.21.5
