@@ -1,9 +1,9 @@
 pip==22.3.1
+numpy==1.24.1
 matplotlib==3.5.2
 seaborn==0.12.2
 statsmodels==0.13.2
 scikit-learn==1.0.2
 boruta==0.3
 xgboost==1.7.2
-numpy==1.24.1
 mlxtend==0.21.0
