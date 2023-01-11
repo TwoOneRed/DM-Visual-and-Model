@@ -266,9 +266,9 @@ boruta_acc_result = pd.melt(boruta_acc_result, id_vars = "No_Of_Features",var_na
 
 # Plot the line charts
 feaComp = plt.figure(figsize=(15,5))
-sns.lineplot(x = "No_Of_Features", y = "Accuracy", hue = "Model", data = boruta_acc_result)
-feaComp.set(ylim=(0, 100))
-feaComp.set(title="Accuracy Trend for Different Feature Selections")
+ax = sns.lineplot(x = "No_Of_Features", y = "Accuracy", hue = "Model", data = boruta_acc_result)
+ax.set(ylim=(0, 100))
+ax.set(title="Accuracy Trend for Different Feature Selections")
 st.pyplot(feaComp)
 
 st.header('PART 3 Model Construction and Comparison')
