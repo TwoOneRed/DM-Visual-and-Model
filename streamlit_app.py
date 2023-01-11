@@ -29,6 +29,9 @@ from sklearn.metrics import roc_auc_score
 from mlxtend.frequent_patterns import fpgrowth
 from mlxtend.frequent_patterns import association_rules
 
+import warnings
+warnings.filterwarnings('ignore')
+
 import webbrowser
 
 df = pd.read_csv('Data_Cleaned.csv')
