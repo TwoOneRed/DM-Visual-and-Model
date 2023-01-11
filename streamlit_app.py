@@ -155,7 +155,7 @@ rules
 
 st.header('PART 2. Feature Selection')
 st.subheader('BORUTA Features')
-# Feature selection usc:\Users\leong\AppData\Local\Programs\Microsoft VS Code\resources\app\out\vs\code\electron-sandbox\workbench\workbench.htmling BORUTA
+
 rf = RandomForestClassifier(n_jobs=-1, class_weight="balanced_subsample", max_depth=5)
 boruta = BorutaPy(rf, n_estimators="auto", random_state=1)
 
@@ -179,7 +179,11 @@ boruta_score = pd.DataFrame(list(boruta_score.items()), columns=['Features', 'Sc
 boruta_score = boruta_score.sort_values("Score", ascending = False)
 
 st.text('BORUTA Top 10 Features')
+bortop10 = plt.figure(figsize=(20,5))
+plt.title('TOP 10')
+plt.bar(boruta_score.head(10)['Features'], boruta_score.head(10)['Score'])
 st.dataframe(boruta_score.head(10))
+st.pyploy(bortop10)
 
 st.text('BORUTA Bottom 10 Features')
 st.dataframe(boruta_score.tail(10))
