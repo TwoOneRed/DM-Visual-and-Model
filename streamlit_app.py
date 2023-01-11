@@ -183,7 +183,7 @@ bortop10 = plt.figure(figsize=(20,5))
 plt.title('TOP 10')
 plt.bar(boruta_score.head(10)['Features'], boruta_score.head(10)['Score'])
 st.dataframe(boruta_score.head(10))
-st.pyploy(bortop10)
+st.pyplot(bortop10)
 
 st.text('BORUTA Bottom 10 Features')
 st.dataframe(boruta_score.tail(10))
