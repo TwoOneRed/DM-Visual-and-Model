@@ -148,8 +148,6 @@ rules = association_rules(frequent_item_sets, metric='confidence', min_threshold
 # Display the association rules
 rules
 
-
-
 st.header('PART 2. Feature Selection')
 st.subheader('BORUTA Features')
 # Feature selection using BORUTA
@@ -169,7 +167,7 @@ def ranking(ranks, names, order=1):
     ranks = map(lambda x: round(x,2), ranks)
     return dict(zip(names, ranks))
 
-boruta.fit(X.values, y.values)
+boruta.fit(X, y)
 
 boruta_score = ranking(list(map(float, boruta.ranking_)), colnames, order=-1)
 boruta_score = pd.DataFrame(list(boruta_score.items()), columns=['Features', 'Score'])
