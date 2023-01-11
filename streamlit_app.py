@@ -130,7 +130,7 @@ for i in ax.containers:
 st.pyplot(q4plt)
 
 st.header('Feature Selection')
-st.subheader('BORUTA Top 10 Features')
+st.subheader('BORUTA Features')
 # Feature selection using BORUTA
 rf = RandomForestClassifier(n_jobs=-1, class_weight="balanced_subsample", max_depth=5)
 boruta = BorutaPy(rf, n_estimators="auto", random_state=1)
@@ -154,13 +154,12 @@ boruta_score = ranking(list(map(float, boruta.ranking_)), colnames, order=-1)
 boruta_score = pd.DataFrame(list(boruta_score.items()), columns=['Features', 'Score'])
 boruta_score = boruta_score.sort_values("Score", ascending = False)
 
-print('---------Top 10----------')
+st.text('BORUTA Top 10 Features')
 st.dataframe(boruta_score.head(10))
 
-print('---------Bottom 10----------')
+st.text('BORUTA Bottom 10 Features')
 st.dataframe(boruta_score.tail(10))
 
 st.subheader('RFE Top 10 Features')
-
 
 st.header('Feature Comparison')
