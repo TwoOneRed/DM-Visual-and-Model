@@ -221,8 +221,5 @@ st.subheader('Regression for Linear Regression')
 
 st.subheader('Regression for Logistic Regression')
 
-uploaded_file = st.file_uploader("Choose a file to attach to the email", type=["csv","txt"])
-
-if uploaded_file is not None:
-    webbrowser.open(f'mailto:?subject=whatthe&body=hi&attach={uploaded_file}')
-    st.success('Files attached to email!')
+if st.button("Button"):
+    webbrowser.open_new("www.facebook.com")
