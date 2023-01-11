@@ -2,12 +2,35 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+
 from statsmodels.formula.api import ols
 import statsmodels.api as sm
+
+from sklearn.preprocessing import MinMaxScaler,LabelEncoder
+from boruta import BorutaPy
+from sklearn.feature_selection import RFECV
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+
+from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LogisticRegression
+from sklearn import metrics
+
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier 
+from sklearn.naive_bayes import GaussianNB
+from xgboost import XGBClassifier
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+
+from sklearn.metrics import roc_curve
+from sklearn.metrics import roc_auc_score
 
 df = pd.read_csv('Data_Cleaned.csv')
 dataset = pd.read_csv('laundry.csv')
 weather = pd.read_csv('weather.csv')
+
+df_encode = df.copy()
+df_encode = df_encode.apply(LabelEncoder().fit_transform)
 
 st.title('Data Mining Project')
 st.header('Member')
@@ -104,3 +127,30 @@ for i in ax.containers:
     ax.bar_label(i,)
 
 st.pyplot(q4plt)
+
+st.header('Feature Selection')
+st.subheader('BORUTA Top 10 Features')
+# Feature selection using BORUTA
+rf = RandomForestClassifier(n_jobs=-1, class_weight="balanced_subsample", max_depth=5)
+boruta = BorutaPy(rf, n_estimators="auto", random_state=1)
+
+y = df_encode["buyDrink"]
+X = df_encode.drop("buyDrink", axis = 1)
+colnames = X.columns
+
+# use 80-20 split, random state = 10
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=10)
+
+def ranking(ranks, names, order=1):
+    minmax = MinMaxScaler()
+    ranks = minmax.fit_transform(order*np.array([ranks]).T).T[0]
+    ranks = map(lambda x: round(x,2), ranks)
+    return dict(zip(names, ranks))
+
+boruta.fit(X.values, y.values.ravel())
+
+
+st.subheader('RFE Top 10 Features')
+
+
+st.header('Feature Comparison')
