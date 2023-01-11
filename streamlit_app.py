@@ -224,8 +224,5 @@ st.subheader('Regression for Logistic Regression')
 uploaded_file = st.file_uploader("Choose a file to attach to the email", type=["csv","txt"])
 
 if uploaded_file is not None:
-    if st.button('Attach files to email'):
-        message = st.text_area("Enter your message")
-        subject = st.text_input("Enter the email's subject")
-        webbrowser.open(f'mailto:?subject={subject}&body={message}&attach={uploaded_file}')
-        st.success('Files attached to email!')
+    webbrowser.open(f'mailto:?subject=whatthe&body=hi&attach={uploaded_file}')
+    st.success('Files attached to email!')
