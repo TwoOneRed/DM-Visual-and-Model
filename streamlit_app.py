@@ -225,8 +225,6 @@ st.subheader('Regression for Linear Regression')
 st.subheader('Regression for Logistic Regression')
 
 
-from streamlit import download_file
-
 html_content = """
     <html>
         <head>
@@ -241,5 +239,5 @@ html_content = """
 
 # Create a button that allows the user to download the HTML file
 if st.button("Download HTML file"):
-    download_file(html_content, "my_html_file.html")
+    st.download(html_content, "my_html_file.html", "Download HTML file")
     st.success("File downloaded!")
