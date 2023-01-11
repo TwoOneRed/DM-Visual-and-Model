@@ -237,7 +237,14 @@ html_content = """
     </html>
 """
 
+import tempfile
+import shutil
+
 # Create a button that allows the user to download the HTML file
 if st.button("Download HTML file"):
-    st.download(html_content, "my_html_file.html", "Download HTML file")
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.html', delete=False) as temp:
+        temp.write(html_content)
+        temp_file_name = temp.name
+    st.file_downloader(temp_file_name, "Download HTML file")
     st.success("File downloaded!")
+    shutil.remove(temp_file_name) # delete temp file
