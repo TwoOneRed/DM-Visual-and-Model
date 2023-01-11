@@ -224,3 +224,6 @@ st.subheader('Regression for Linear Regression')
 
 st.subheader('Regression for Logistic Regression')
 
+if st.button('Attach files to email'):
+    #webbrowser.open(f'mailto:?subject={subject}&body={message}&attach={uploaded_file}')
+    st.success('Files attached to email!')
