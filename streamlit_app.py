@@ -169,7 +169,7 @@ def ranking(ranks, names, order=1):
     ranks = map(lambda x: round(x,2), ranks)
     return dict(zip(names, ranks))
 
-boruta.fit(X.values, y.values.ravel())
+boruta.fit(X.values, y.values)
 
 boruta_score = ranking(list(map(float, boruta.ranking_)), colnames, order=-1)
 boruta_score = pd.DataFrame(list(boruta_score.items()), columns=['Features', 'Score'])
