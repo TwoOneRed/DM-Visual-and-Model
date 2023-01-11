@@ -182,18 +182,41 @@ st.text('BORUTA Top 10 Features')
 bortop10 = plt.figure(figsize=(15,5))
 plt.title('TOP 10')
 plt.bar(boruta_score.head(10)['Features'], boruta_score.head(10)['Score'])
+
 st.dataframe(boruta_score.head(10))
 st.pyplot(bortop10)
 
 st.text('BORUTA Bottom 10 Features')
+borbot10 = plt.figure(figsize=(15,5))
+plt.title('BOTTOM 10')
+plt.bar(boruta_score.tail(10)['Features'], boruta_score.tail(10)['Score'])
 st.dataframe(boruta_score.tail(10))
+st.pyplot(borbot10)
 
-st.subheader('RFE Top 10 Features')
+rf = RandomForestClassifier(n_jobs=-1,class_weight='balanced_subsample',max_depth = 5,n_estimators=20,random_state=1)
+rf.fit(X,y)
+rfe = RFECV(rf,min_features_to_select = 1, cv=2)
+rfe.fit(X,y)
+
+rfe_score = ranking(list(map(float, rfe.ranking_)), colnames, order=-1)
+rfe_score = pd.DataFrame(list(rfe_score.items()), columns=['Features', 'Score'])
+rfe_score = rfe_score.sort_values("Score", ascending = False)
+
+st.subheader('RFE Features')
 st.text('RFE Top 10 Features')
-st.dataframe(boruta_score.head(10))
+
+rfetop10 = plt.figure(figsize=(15,5))
+plt.title('TOP 10')
+plt.bar(rfe_score.head(10)['Features'], rfe_score.head(10)['Score'])
+st.pyplot(rfetop10)
+st.dataframe(rfe_score.head(10))
 
 st.text('RFE Bottom 10 Features')
-st.dataframe(boruta_score.tail(10))
+rfebot10 = plt.figure(figsize=(15,5))
+plt.title('BOTTOM 10')
+plt.bar(rfe_score.tail(10)['Features'], rfe_score.tail(10)['Score'])
+st.pyplot(rfebot10)
+st.dataframe(rfe_score.tail(10))
 
 st.subheader('Feature Comparison')
 
