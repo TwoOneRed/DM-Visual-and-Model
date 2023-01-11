@@ -205,18 +205,19 @@ rfe_score = rfe_score.sort_values("Score", ascending = False)
 st.subheader('RFE Features')
 st.text('RFE Top 10 Features')
 
+st.dataframe(rfe_score.head(10))
 rfetop10 = plt.figure(figsize=(15,5))
 plt.title('TOP 10')
 plt.bar(rfe_score.head(10)['Features'], rfe_score.head(10)['Score'])
 st.pyplot(rfetop10)
-st.dataframe(rfe_score.head(10))
+
 
 st.text('RFE Bottom 10 Features')
+st.dataframe(rfe_score.tail(10))
 rfebot10 = plt.figure(figsize=(15,5))
 plt.title('BOTTOM 10')
 plt.bar(rfe_score.tail(10)['Features'], rfe_score.tail(10)['Score'])
 st.pyplot(rfebot10)
-st.dataframe(rfe_score.tail(10))
 
 
 st.subheader('Feature Comparison')
@@ -264,11 +265,11 @@ boruta_acc_result = pd.DataFrame(list(zip(feature_num,acc_boruta, acc_rfe)),colu
 boruta_acc_result = pd.melt(boruta_acc_result, id_vars = "No_Of_Features",var_name = "Model", value_name = "Accuracy")
 
 # Plot the line charts
-feacomp = sns.set(rc={'figure.figsize':(11.7,8.27)})
-ax = sns.lineplot(x = "No_Of_Features", y = "Accuracy", hue = "Model", data = boruta_acc_result)
-ax.set(ylim=(0, 100))
-ax.set(title="Accuracy Trend for Different Feature Selections")
-st.pyplot(feacomp)
+feaComp = plt.figure(figsize=(15,5))
+sns.lineplot(x = "No_Of_Features", y = "Accuracy", hue = "Model", data = boruta_acc_result)
+feaComp.set(ylim=(0, 100))
+feaComp.set(title="Accuracy Trend for Different Feature Selections")
+st.pyplot(feaComp)
 
 st.header('PART 3 Model Construction and Comparison')
 st.subheader('Classification For Naive Bayes')
