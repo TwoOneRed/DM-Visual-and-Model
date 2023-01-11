@@ -225,4 +225,4 @@ st.subheader('Regression for Linear Regression')
 st.subheader('Regression for Logistic Regression')
 
 if st.button("Button"):
-    webbrowser.open_new("www.facebook.com")
+    st.markdown(f'<script>window.open("https://www.example.com","_blank")</script>', unsafe_allow_html=True)
