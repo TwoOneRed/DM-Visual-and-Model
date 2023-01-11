@@ -224,5 +224,22 @@ st.subheader('Regression for Linear Regression')
 
 st.subheader('Regression for Logistic Regression')
 
-if st.button("Button"):
-    st.markdown(f'<script>window.open("https://www.example.com","_blank")</script>', unsafe_allow_html=True)
+
+from streamlit import download_file
+
+html_content = """
+    <html>
+        <head>
+            <title>My HTML File</title>
+        </head>
+        <body>
+            <h1>Welcome to my HTML file</h1>
+            <p>This is a simple example of an HTML file created using Streamlit.</p>
+        </body>
+    </html>
+"""
+
+# Create a button that allows the user to download the HTML file
+if st.button("Download HTML file"):
+    download_file(html_content, "my_html_file.html")
+    st.success("File downloaded!")
