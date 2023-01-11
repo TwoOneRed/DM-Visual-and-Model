@@ -147,7 +147,7 @@ def ranking(ranks, names, order=1):
     ranks = map(lambda x: round(x,2), ranks)
     return dict(zip(names, ranks))
 
-#boruta.fit(X.values, y.values.ravel())
+boruta.fit(X.values, y.values.ravel())
 
 
 st.subheader('RFE Top 10 Features')
