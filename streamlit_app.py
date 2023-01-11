@@ -29,6 +29,8 @@ from sklearn.metrics import roc_auc_score
 from mlxtend.frequent_patterns import fpgrowth
 from mlxtend.frequent_patterns import association_rules
 
+import webbrowser
+
 df = pd.read_csv('Data_Cleaned.csv')
 dataset = pd.read_csv('laundry.csv')
 weather = pd.read_csv('weather.csv')
@@ -219,7 +221,13 @@ st.subheader('Regression for Linear Regression')
 
 st.subheader('Regression for Logistic Regression')
 
-st.subheader()
-st.subheader()
-st.subheader()
+st.download_button('Download Report')
 
+uploaded_file = st.file_uploader("Choose a file to attach to the email", type=["csv","txt"])
+
+if uploaded_file is not None:
+    if st.button('Attach files to email'):
+        message = st.text_area("Enter your message")
+        subject = st.text_input("Enter the email's subject")
+        webbrowser.open(f'mailto:?subject={subject}&body={message}&attach={uploaded_file}')
+        st.success('Files attached to email!')
