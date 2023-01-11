@@ -35,6 +35,7 @@ weather = pd.read_csv('weather.csv')
 
 df_encode = df.copy()
 df_encode = df_encode.apply(LabelEncoder().fit_transform)
+st.dataframe(df_encode)
 
 st.title('Data Mining Project')
 st.header('Member')
