@@ -149,6 +149,15 @@ def ranking(ranks, names, order=1):
 
 boruta.fit(X.values, y.values.ravel())
 
+boruta_score = ranking(list(map(float, boruta.ranking_)), colnames, order=-1)
+boruta_score = pd.DataFrame(list(boruta_score.items()), columns=['Features', 'Score'])
+boruta_score = boruta_score.sort_values("Score", ascending = False)
+
+print('---------Top 10----------')
+st.dataframe(boruta_score.head(10))
+
+print('---------Bottom 10----------')
+st.dataframe(boruta_score.tail(10))
 
 st.subheader('RFE Top 10 Features')
 
