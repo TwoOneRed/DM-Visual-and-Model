@@ -202,8 +202,8 @@ rfe_score = ranking(list(map(float, rfe.ranking_)), colnames, order=-1)
 rfe_score = pd.DataFrame(list(rfe_score.items()), columns=['Features', 'Score'])
 rfe_score = rfe_score.sort_values("Score", ascending = False)
 
-st.subheader('RFE Features')
-st.text('RFE Top 10 Features')
+st.subheader('Recursive feature elimination (RFE) Features')
+st.text('Recursive feature elimination  Top 10 Features')
 
 st.dataframe(rfe_score.head(10))
 rfetop10 = plt.figure(figsize=(15,5))
@@ -212,7 +212,7 @@ plt.bar(rfe_score.head(10)['Features'], rfe_score.head(10)['Score'])
 st.pyplot(rfetop10)
 
 
-st.text('RFE Bottom 10 Features')
+st.text('Recursive feature elimination Bottom 10 Features')
 st.dataframe(rfe_score.tail(10))
 rfebot10 = plt.figure(figsize=(15,5))
 plt.title('BOTTOM 10')
@@ -270,6 +270,10 @@ ax = sns.lineplot(x = "No_Of_Features", y = "Accuracy", hue = "Model", data = bo
 ax.set(ylim=(0, 100))
 ax.set(title="Accuracy Trend for Different Feature Selections")
 st.pyplot(feaComp)
+
+st.text("Accuracy For Recursive feature elimination = ",boruta_acc_result[boruta_acc_result["Model"] == "RFE"]['Accuracy'].mean())
+st.text("Accuracy For Naive Bayes = ",boruta_acc_result[boruta_acc_result["Model"] == "BORUTA"]['Accuracy'].mean())
+
 
 st.header('PART 3 Model Construction and Comparison')
 st.subheader('Classification For Naive Bayes')
