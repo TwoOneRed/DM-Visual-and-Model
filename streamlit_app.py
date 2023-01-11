@@ -35,7 +35,6 @@ weather = pd.read_csv('weather.csv')
 
 df_encode = df.copy()
 df_encode = df_encode.apply(LabelEncoder().fit_transform)
-st.dataframe(df_encode)
 
 st.title('Data Mining Project')
 st.header('Member')
@@ -151,7 +150,7 @@ rules
 
 st.header('PART 2. Feature Selection')
 st.subheader('BORUTA Features')
-# Feature selection using BORUTA
+# Feature selection usc:\Users\leong\AppData\Local\Programs\Microsoft VS Code\resources\app\out\vs\code\electron-sandbox\workbench\workbench.htmling BORUTA
 rf = RandomForestClassifier(n_jobs=-1, class_weight="balanced_subsample", max_depth=5)
 boruta = BorutaPy(rf, n_estimators="auto", random_state=1)
 
@@ -168,7 +167,7 @@ def ranking(ranks, names, order=1):
     ranks = map(lambda x: round(x,2), ranks)
     return dict(zip(names, ranks))
 
-boruta.fit(X.values, y.ravel())
+boruta.fit(np.array(X), np.array(y))
 
 boruta_score = ranking(list(map(float, boruta.ranking_)), colnames, order=-1)
 boruta_score = pd.DataFrame(list(boruta_score.items()), columns=['Features', 'Score'])
