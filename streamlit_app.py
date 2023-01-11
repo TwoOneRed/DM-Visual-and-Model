@@ -221,8 +221,6 @@ st.subheader('Regression for Linear Regression')
 
 st.subheader('Regression for Logistic Regression')
 
-st.download_button('Download Report')
-
 uploaded_file = st.file_uploader("Choose a file to attach to the email", type=["csv","txt"])
 
 if uploaded_file is not None:
