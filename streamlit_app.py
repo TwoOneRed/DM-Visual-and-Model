@@ -271,8 +271,9 @@ ax.set(ylim=(0, 100))
 ax.set(title="Accuracy Trend for Different Feature Selections")
 st.pyplot(feaComp)
 
-st.text("Accuracy For Recursive feature elimination = " + str(boruta_acc_result[boruta_acc_result["Model"] == "RFE"]['Accuracy'].mean()))
-st.text("Accuracy For Naive Bayes = " + str(boruta_acc_result[boruta_acc_result["Model"] == "BORUTA"]['Accuracy'].mean()))
+st.text("Average Accuracy: ")
+st.text("Recursive feature elimination = " + str(boruta_acc_result[boruta_acc_result["Model"] == "RFE"]['Accuracy'].mean()))
+st.text("Naive Bayes = " + str(boruta_acc_result[boruta_acc_result["Model"] == "BORUTA"]['Accuracy'].mean()))
 
 
 st.header('PART 3 Model Construction and Comparison')
