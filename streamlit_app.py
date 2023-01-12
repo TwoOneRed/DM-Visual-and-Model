@@ -7,6 +7,7 @@ import numpy as np
 from statsmodels.formula.api import ols
 import statsmodels.api as sm
 
+from sklearn.cluster import KMeans
 from sklearn.preprocessing import MinMaxScaler,LabelEncoder
 from boruta import BorutaPy
 from sklearn.feature_selection import RFECV
@@ -138,20 +139,32 @@ for i in ax.containers:
 
 st.pyplot(q4plt)
 
+
 st.subheader('Question 5')
-st.text('ARM')
-q6 = df[['Race','Gender','Body_Size','With_Kids','Kids_Category','Basket_colour','Attire','Shirt_Colour','shirt_type','Pants_Colour','pants_type','Wash_Item','Day','Time_Of_The_Day','Spectacles']]
+# Load the data
+q5 = df
+q5cl = df[['Age_Range','TimeSpent_minutes']]
 
-oneh = pd.get_dummies(q6)
+# Create the KMeans model
+kmeans = KMeans(n_clusters=8,random_state=1)
 
-# Find frequent item sets using the FP-growth algorithm
-frequent_item_sets = fpgrowth(oneh, min_support=0.10, use_colnames=True)
+# Fit the model to the data
+kmeans.fit(q5cl)
 
-# Compute association rules
-rules = association_rules(frequent_item_sets, metric='confidence', min_threshold=0.3)
+# Get the cluster labels for each data point
+q5['labels'] = kmeans.predict(q5cl)
 
-# Display the association rules
-rules
+q5plot = plt.figure(figsize=(7,7))
+ax = sns.scatterplot(x="Age_Range", y="TimeSpent_minutes", hue="labels", data=q5,palette='rocket',legend='full')
+st.pyploy(q5plot)
+
+q5plot1 = plt.figure(figsize=(5,5))
+q5 = q5.groupby('labels').sum('buyDrink').reset_index()
+ax = sns.barplot(data=q5, x="labels", y="buyDrink",palette='rocket')
+for i in ax.containers:
+    ax.bar_label(i,)
+st.pyplot(q5plot1)
+
 
 st.header('PART 2. Feature Selection')
 st.subheader('BORUTA Features')
