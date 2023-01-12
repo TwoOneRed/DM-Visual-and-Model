@@ -31,6 +31,7 @@ warnings.filterwarnings('ignore')
 df = pd.read_csv('Data_Cleaned.csv')
 dataset = pd.read_csv('laundry.csv')
 weather = pd.read_csv('weather.csv')
+smote = pd.read_csv('Data_Smote.csv')
 
 df_encode = df.copy()
 df_encode = df_encode.apply(LabelEncoder().fit_transform)
@@ -383,7 +384,7 @@ st.pyplot(nb10)
 ###########################################################################################################################################################################
 
 st.markdown("**Naive Bayes With SMOTE dataset (top 5 features)**")
-top5_df_smote = df_smote[["dew", "humidity", "windspeed", "Age_Range", "sealevelpressure", "buyDrink"]]
+top5_df_smote = smote[["dew", "humidity", "windspeed", "Age_Range", "sealevelpressure", "buyDrink"]]
 
 #create X and y dataset
 y = top5_df_smote["buyDrink"]
@@ -400,24 +401,26 @@ for i in range(1, 50):
     values.append(top5_nb_smote.score(X_test, y_test))
     
 acc = sum(values)/len(values)
-print("Average Accuracy: {:.4f}".format(acc))
+st.text("Average Accuracy: {:.4f}".format(acc))
 
 # get the auc score
 prob_NB = top5_nb_smote.predict_proba(X_test)
 prob_NB = prob_NB[:, 1]
 
 auc_NB = roc_auc_score(y_test, prob_NB)
-print('AUC: %.2f' % auc_NB)
+st.text('AUC: %.2f' % auc_NB)
 
 # Plot ROC Curve
 fpr_NB, tpr_NB, thresholds_NB = roc_curve(y_test, prob_NB) 
 
+smotenb5 = plt.figure(figsize=(10,8))
 plt.plot(fpr_NB, tpr_NB, color='orange', label='NB') 
 plt.plot([0, 1], [0, 1], color='green', linestyle='--')
 plt.xlabel('False Positive Rate')
 plt.ylabel('True Positive Rate')
 plt.title('Receiver Operating Characteristic (ROC) Curve for NB using top 5 features')
 plt.legend()
+st.pyplot(smotenb5)
 
 st.markdown("**Naive Bayes With SMOTE dataset (top 10 features)**")
 
