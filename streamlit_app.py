@@ -293,7 +293,7 @@ st.text("Naive Bayes = " + str(boruta_acc_result[boruta_acc_result["Model"] == "
 
 st.header('PART 3 Model Construction and Comparison')
 st.subheader('Classification For Naive Bayes')
-st.text("Naive Bayes Top 5 Features")
+st.markdown("**Naive Bayes Top 5 Features**")
 
 top5_df = df_encode[["dew", "humidity", "windspeed", "Age_Range", "sealevelpressure", "buyDrink"]]
 
