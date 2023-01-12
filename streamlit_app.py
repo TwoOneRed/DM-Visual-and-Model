@@ -469,41 +469,7 @@ st.pyplot(smotenb10)
 
 st.subheader("Classification For XGBoost")
 st.markdown("**XGBoost Top 5 Features**")
-#create X and y dataset
-y = top10_df["buyDrink"]
-X = top10_df.drop("buyDrink", axis = 1)
 
-values = []
-top10_xg = XGBClassifier()
-
-for i in range(1, 50):
-    #Split train-test dataset
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify = y)
-    top10_xg.fit(X_train, y_train)
-    y_pred = top10_xg.predict(X_test)
-    values.append(top10_xg.score(X_test, y_test))
-    
-acc_top10xg = sum(values)/len(values)
-st.text("Average Accuracy: {:.4f}".format(acc_top10xg))
-
-# get the auc score
-prob_XG = top10_xg.predict_proba(X_test)
-prob_XG = prob_XG[:, 1]
-
-auc_XG = roc_auc_score(y_test, prob_XG)
-st.text('AUC: %.2f' % auc_XG)
-
-# Plot ROC Curve
-fpr_XG, tpr_XG, thresholds_XG = roc_curve(y_test, prob_XG) 
-
-xg5 = plt.figure(figsize=(10,8))
-plt.plot(fpr_XG, tpr_XG, color='orange', label='XGBoost') 
-plt.plot([0, 1], [0, 1], color='green', linestyle='--')
-plt.xlabel('False Positive Rate')
-plt.ylabel('True Positive Rate')
-plt.title('Receiver Operating Characteristic (ROC) Curve for XGBoost using top 10 features')
-plt.legend()
-st.pyplot(xg5)
 
 ###########################################################################################################################################################################
 
