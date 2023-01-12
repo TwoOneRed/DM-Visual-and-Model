@@ -541,6 +541,21 @@ st.subheader('Regression for Logistic Regression')
 
 st.subheader('Association Rule Mining')
 
+q6 = df[['Race','Gender','Body_Size','With_Kids','Kids_Category','Basket_colour','Attire','Shirt_Colour','shirt_type','Pants_Colour','pants_type','Wash_Item','Day','Time_Of_The_Day','Spectacles']]
+
+# one-hot encoding
+oneh = pd.get_dummies(q6)
+
+# Find frequent item sets using the FP-growth algorithm
+frequent_item_sets = fpgrowth(oneh, min_support=0.10, use_colnames=True)
+
+# Compute association rules
+rules = association_rules(frequent_item_sets, metric='confidence', min_threshold=0.3)
+
+# Display the association rules
+st.dataframe(rules)
+
+
 if st.button('Attach files to email'):
     #webbrowser.open(f'mailto:?subject={subject}&body={message}&attach={uploaded_file}')
     st.success('Files attached to email!')
