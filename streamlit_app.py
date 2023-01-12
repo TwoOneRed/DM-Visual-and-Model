@@ -156,7 +156,7 @@ q5['labels'] = kmeans.predict(q5cl)
 
 q5plot = plt.figure(figsize=(7,7))
 ax = sns.scatterplot(x="Age_Range", y="TimeSpent_minutes", hue="labels", data=q5,palette='rocket',legend='full')
-st.pyploy(q5plot)
+st.pyplot(q5plot)
 
 q5plot1 = plt.figure(figsize=(5,5))
 q5 = q5.groupby('labels').sum('buyDrink').reset_index()
