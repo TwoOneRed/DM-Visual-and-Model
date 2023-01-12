@@ -337,6 +337,7 @@ plt.title('Receiver Operating Characteristic (ROC) Curve for NB using top 5 feat
 plt.legend()
 st.pyplot(nb5)
 
+###########################################################################################################################################################################
 
 st.markdown("**Naive Bayes Top 10 Features**")
 
@@ -379,8 +380,46 @@ plt.title('Receiver Operating Characteristic (ROC) Curve for NB using top 10 fea
 plt.legend()
 st.pyplot(nb10)
 
+###########################################################################################################################################################################
 
-st.markdown("**SMOTE comparison for Naive Bayes**")
+st.markdown("**Naive Bayes With SMOTE dataset (top 5 features)**")
+top5_df_smote = df_smote[["dew", "humidity", "windspeed", "Age_Range", "sealevelpressure", "buyDrink"]]
+
+#create X and y dataset
+y = top5_df_smote["buyDrink"]
+X = top5_df_smote.drop("buyDrink", axis = 1)
+
+values = []
+top5_nb_smote = GaussianNB()
+
+for i in range(1, 50):
+    #Split train-test dataset
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+    top5_nb_smote.fit(X_train, y_train)
+    y_pred = top5_nb_smote.predict(X_test)
+    values.append(top5_nb_smote.score(X_test, y_test))
+    
+acc = sum(values)/len(values)
+print("Average Accuracy: {:.4f}".format(acc))
+
+# get the auc score
+prob_NB = top5_nb_smote.predict_proba(X_test)
+prob_NB = prob_NB[:, 1]
+
+auc_NB = roc_auc_score(y_test, prob_NB)
+print('AUC: %.2f' % auc_NB)
+
+# Plot ROC Curve
+fpr_NB, tpr_NB, thresholds_NB = roc_curve(y_test, prob_NB) 
+
+plt.plot(fpr_NB, tpr_NB, color='orange', label='NB') 
+plt.plot([0, 1], [0, 1], color='green', linestyle='--')
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Receiver Operating Characteristic (ROC) Curve for NB using top 5 features')
+plt.legend()
+
+st.markdown("**Naive Bayes With SMOTE dataset (top 10 features)**")
 
 
 st.markdown("**Classification For XGBoost**")
