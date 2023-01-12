@@ -535,5 +535,5 @@ st.download_button(label="Export_Report",
                     mime='application/octet-stream')
 
 if st.button('Email Report'):
-    #webbrowser.open(f'mailto:?subject={subject}&body={message}&attach={uploaded_file}')
+    webbrowser.open(f'mailto:?attach={html_file}')
     st.success('Files attached to email!')
