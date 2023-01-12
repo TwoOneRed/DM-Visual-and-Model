@@ -531,7 +531,7 @@ with open("test.html", "rb") as html_file:
 
 st.download_button(label="Export_Report",
                     data=PDFbyte,
-                    file_name="test.pdf",
+                    file_name="test.html",
                     mime='application/octet-stream')
 
 if st.button('Email Report'):
