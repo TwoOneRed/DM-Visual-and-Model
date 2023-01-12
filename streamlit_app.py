@@ -288,6 +288,8 @@ st.header('PART 3 Model Construction and Comparison')
 st.subheader('Classification For Naive Bayes')
 st.markdown("**Naive Bayes Top 5 Features**")
 
+compareplt = plt.figure(10,8)
+
 top5_df = df_encode[["dew", "humidity", "windspeed", "Age_Range", "sealevelpressure", "buyDrink"]]
 
 #create X and y dataset
@@ -325,6 +327,7 @@ plt.title('Receiver Operating Characteristic (ROC) Curve for NB using top 5 feat
 plt.legend()
 st.pyplot(nb5)
 
+compareplt = plt.plot(fpr_NB, tpr_NB, color='orange', label='NB 5 Features') 
 
 st.markdown("**Naive Bayes Top 10 Features**")
 
@@ -367,7 +370,16 @@ plt.title('Receiver Operating Characteristic (ROC) Curve for NB using top 10 fea
 plt.legend()
 st.pyplot(nb10)
 
+compareplt = plt.plot(fpr_NB, tpr_NB, color='orange', label='NB 10 Features') 
+
 st.markdown("**Compare Naive Bayes by Features**")
+
+compareplt = plt.plot([0, 1], [0, 1], color='green', linestyle='--')
+compareplt = plt.xlabel('False Positive Rate')
+compareplt = plt.ylabel('True Positive Rate')
+compareplt = plt.title('Receiver Operating Characteristic (ROC) Curve for NB using top 10 features and top 5')
+plt.legend()
+st.pyplot(compareplt)
 
 st.markdown("**SMOTE comparison for Naive Bayes**")
 
