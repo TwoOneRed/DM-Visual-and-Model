@@ -508,6 +508,42 @@ st.pyplot(xg5)
 ###########################################################################################################################################################################
 
 st.markdown("**XGBoost Top 10 Features**")
+#create X and y dataset
+y = top5_df_smote["buyDrink"]
+X = top5_df_smote.drop("buyDrink", axis = 1)
+
+values = []
+top5_smote_xg = XGBClassifier()
+
+for i in range(1, 50):
+    #Split train-test dataset
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify = y)
+    top5_smote_xg.fit(X_train, y_train)
+    y_pred = top5_smote_xg.predict(X_test)
+    values.append(top5_smote_xg.score(X_test, y_test))
+    st.text(i)
+    
+acc = sum(values)/len(values)
+st.text("Average Accuracy: {:.4f}".format(acc))
+
+# get the auc score
+prob_XG = top5_smote_xg.predict_proba(X_test)
+prob_XG = prob_XG[:, 1]
+
+auc_XG = roc_auc_score(y_test, prob_XG)
+st.text('AUC: %.2f' % auc_XG)
+
+# Plot ROC Curve
+fpr_XG, tpr_XG, thresholds_XG = roc_curve(y_test, prob_XG) 
+
+xg10 = plt.figure(figsize=(10,8))
+plt.plot(fpr_XG, tpr_XG, color='orange', label='XGBoost') 
+plt.plot([0, 1], [0, 1], color='green', linestyle='--')
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Receiver Operating Characteristic (ROC) Curve for XGBoost using top 5 features')
+plt.legend()
+st.pyplot(xg10)
 
 ###########################################################################################################################################################################
 
