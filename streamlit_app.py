@@ -23,10 +23,10 @@ from sklearn.metrics import roc_curve
 from sklearn.metrics import roc_auc_score
 from mlxtend.frequent_patterns import fpgrowth
 from mlxtend.frequent_patterns import association_rules
+import webbrowser
 import warnings
 warnings.filterwarnings('ignore')
 
-import webbrowser
 
 df = pd.read_csv('Data_Cleaned.csv')
 dataset = pd.read_csv('laundry.csv')
@@ -49,6 +49,10 @@ st.dataframe(weather)
 st.header('Cleaned Datasets')
 st.dataframe(df)
 
+###########################################################################################################################################################################
+###########################################################################################################################################################################
+###########################################################################################################################################################################
+
 #QUESTION 1
 st.header('Exploratory Data Analysis')
 st.subheader('Question 1')
@@ -65,7 +69,7 @@ for i in ax.containers:
 
 st.pyplot(q1plt)
 
-
+##########################################################################################################################################################
 #QUESTION 2
 st.subheader('Question 2')
 st.text('Do basket size and family with kids influence the number of people buying drinks?')
@@ -75,9 +79,7 @@ q2 = df[['Basket_Size', 'With_Kids', 'buyDrink']]
 # Finding mean Monthly Family Expenses for each LifeStyle and Education
 q2 = q2.groupby(['Basket_Size','With_Kids']).sum('buyDrink').round(2).reset_index()
 
-#############################################################################
 #1 Chart
-
 q2plt = plt.figure(figsize=(7,5))
 ax = sns.barplot(x='Basket_Size', y='buyDrink', hue='With_Kids', data=q2)
 
@@ -96,9 +98,8 @@ model = ols('buyDrink ~ C(Basket_Size) + C(With_Kids) + C(Basket_Size):C(With_Ki
 
 st.dataframe(sm.stats.anova_lm(model, typ=2))
 
-#width = st.sidebar.slider("plot width", 1, 25, 3)
-#height = st.sidebar.slider("plot height", 1, 25, 1)
 
+##########################################################################################################################################################
 #QUESTION 3
 
 #st.subheader('Question 3')
@@ -112,6 +113,7 @@ st.dataframe(sm.stats.anova_lm(model, typ=2))
 
 #st.pyplot(q3plt)
 
+##########################################################################################################################################################
 #QUESTION 4
 st.subheader('Question 4')
 st.text('Are there difference in average total spent (RM) in laundry shops between each of the age groups?')
@@ -132,7 +134,8 @@ for i in ax.containers:
 
 st.pyplot(q4plt)
 
-
+##########################################################################################################################################################
+#QUESTION 5
 st.subheader('Question 5')
 st.text('K-means Clustering')
 st.text('Does TimeSpent_minutes and Age_Range has differences in terms of buying drinks in laundry shops?')
@@ -160,6 +163,9 @@ for i in ax.containers:
     ax.bar_label(i,)
 st.pyplot(q5plot1)
 
+###########################################################################################################################################################################
+###########################################################################################################################################################################
+###########################################################################################################################################################################
 
 st.header('PART 2. Feature Selection')
 st.subheader('BORUTA Features')
@@ -209,6 +215,9 @@ rfe.fit(X,y)
 rfe_score = ranking(list(map(float, rfe.ranking_)), colnames, order=-1)
 rfe_score = pd.DataFrame(list(rfe_score.items()), columns=['Features', 'Score'])
 rfe_score = rfe_score.sort_values("Score", ascending = False)
+
+###########################################################################################################################################################################
+###########################################################################################################################################################################
 
 st.subheader('Recursive feature elimination (RFE) Features')
 st.text('Recursive feature elimination  Top 10 Features')
@@ -283,12 +292,13 @@ st.text("Average Accuracy: ")
 st.text("Recursive feature elimination = " + str(boruta_acc_result[boruta_acc_result["Model"] == "RFE"]['Accuracy'].mean()))
 st.text("Naive Bayes = " + str(boruta_acc_result[boruta_acc_result["Model"] == "BORUTA"]['Accuracy'].mean()))
 
+###########################################################################################################################################################################
+###########################################################################################################################################################################
+###########################################################################################################################################################################
 
 st.header('PART 3 Model Construction and Comparison')
 st.subheader('Classification For Naive Bayes')
 st.markdown("**Naive Bayes Top 5 Features**")
-
-compareplt = plt.figure(10,8)
 
 top5_df = df_encode[["dew", "humidity", "windspeed", "Age_Range", "sealevelpressure", "buyDrink"]]
 
@@ -327,7 +337,6 @@ plt.title('Receiver Operating Characteristic (ROC) Curve for NB using top 5 feat
 plt.legend()
 st.pyplot(nb5)
 
-compareplt = plt.plot(fpr_NB, tpr_NB, color='orange', label='NB 5 Features') 
 
 st.markdown("**Naive Bayes Top 10 Features**")
 
@@ -370,16 +379,6 @@ plt.title('Receiver Operating Characteristic (ROC) Curve for NB using top 10 fea
 plt.legend()
 st.pyplot(nb10)
 
-compareplt = plt.plot(fpr_NB, tpr_NB, color='orange', label='NB 10 Features') 
-
-st.markdown("**Compare Naive Bayes by Features**")
-
-compareplt = plt.plot([0, 1], [0, 1], color='green', linestyle='--')
-compareplt = plt.xlabel('False Positive Rate')
-compareplt = plt.ylabel('True Positive Rate')
-compareplt = plt.title('Receiver Operating Characteristic (ROC) Curve for NB using top 10 features and top 5')
-plt.legend()
-st.pyplot(compareplt)
 
 st.markdown("**SMOTE comparison for Naive Bayes**")
 
