@@ -333,22 +333,22 @@ plt.legend()
 st.pyplot(nb5)
 
 
-st.text("Naive Bayes Top 10 Features")
+st.markdown("**Naive Bayes Top 10 Features**")
 
-st.text("Compare Naive Bayes by Features")
+st.markdown("**Compare Naive Bayes by Features**")
 
-st.text("SMOTE comparison for Naive Bayes")
+st.markdown("**SMOTE comparison for Naive Bayes**")
 
 
-st.subheader('Classification For XGBoost')
+st.markdown("**Classification For XGBoost**")
 
-st.text("XGBoost Top 5 Features")
+st.markdown("**XGBoost Top 5 Features**")
 
-st.text("XGBoost Top 10 Features")
+st.markdown("**XGBoost Top 10 Features**")
 
-st.text("Compare XGBoost by Features")
+st.markdown("**Compare XGBoost by Features**")
 
-st.text("SMOTE comparison for XGBoost")
+st.markdown("**SMOTE comparison for XGBoost**")
 
 st.subheader('Ensemble')
 
