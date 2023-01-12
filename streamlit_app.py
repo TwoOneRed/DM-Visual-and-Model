@@ -323,7 +323,8 @@ st.text('AUC: %.2f' % auc_NB)
 # Plot ROC Curve
 fpr_NB, tpr_NB, thresholds_NB = roc_curve(y_test, prob_NB) 
 
-nb5 = plt.plot(fpr_NB, tpr_NB, color='orange', label='NB') 
+nb5 = plt.figure(figsize=(10,8))
+plt.plot(fpr_NB, tpr_NB, color='orange', label='NB') 
 plt.plot([0, 1], [0, 1], color='green', linestyle='--')
 plt.xlabel('False Positive Rate')
 plt.ylabel('True Positive Rate')
