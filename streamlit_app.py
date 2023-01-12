@@ -534,11 +534,3 @@ st.download_button(label="Export_Report",
                     file_name="test.html",
                     mime='application/octet-stream')
 
-
-to = "example@example.com"
-subject = "Hello"
-body = "Hello, how are you?"
-
-if st.button("Click Me"):
-    mailto_link = f'mailto:{to}?subject={subject}&body={body}&attachment={PDFbyte}'
-    st.write(f'<a href="{mailto_link}">Open Email with attachment</a>', unsafe_allow_html=True)
