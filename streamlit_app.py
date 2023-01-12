@@ -141,6 +141,8 @@ st.pyplot(q4plt)
 
 
 st.subheader('Question 5')
+st.text('K-means Clustering')
+st.text('Does TimeSpent_minutes and Age_Range has differences in terms of buying drinks in laundry shops?')
 # Load the data
 q5 = df
 q5cl = df[['Age_Range','TimeSpent_minutes']]
@@ -291,8 +293,44 @@ st.text("Naive Bayes = " + str(boruta_acc_result[boruta_acc_result["Model"] == "
 
 st.header('PART 3 Model Construction and Comparison')
 st.subheader('Classification For Naive Bayes')
-
 st.text("Naive Bayes Top 5 Features")
+
+top5_df = df_encode[["dew", "humidity", "windspeed", "Age_Range", "sealevelpressure", "buyDrink"]]
+
+#create X and y dataset
+y = top5_df["buyDrink"]
+X = top5_df.drop("buyDrink", axis = 1)
+
+values = []
+top5_nb = GaussianNB()
+
+for i in range(1, 50):
+    #Split train-test dataset
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify = y)
+    top5_nb.fit(X_train, y_train)
+    y_pred = top5_nb.predict(X_test)
+    values.append(top5_nb.score(X_test, y_test))
+    
+acc_top5nb = sum(values)/len(values)
+st.text("Average Accuracy: {:.4f}".format(acc_top5nb))
+
+# get the auc score
+prob_NB = top5_nb.predict_proba(X_test)
+prob_NB = prob_NB[:, 1]
+auc_NB = roc_auc_score(y_test, prob_NB)
+st.text('AUC: %.2f' % auc_NB)
+
+# Plot ROC Curve
+fpr_NB, tpr_NB, thresholds_NB = roc_curve(y_test, prob_NB) 
+
+nb5 = plt.plot(fpr_NB, tpr_NB, color='orange', label='NB') 
+plt.plot([0, 1], [0, 1], color='green', linestyle='--')
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Receiver Operating Characteristic (ROC) Curve for NB using top 5 features')
+plt.legend()
+st.pyplot(nb5)
+
 
 st.text("Naive Bayes Top 10 Features")
 
@@ -318,6 +356,8 @@ st.subheader('Hyperparameter')
 st.subheader('Regression for Linear Regression')
 
 st.subheader('Regression for Logistic Regression')
+
+st.subheader('Association Rule Mining')
 
 if st.button('Attach files to email'):
     #webbrowser.open(f'mailto:?subject={subject}&body={message}&attach={uploaded_file}')
