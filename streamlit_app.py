@@ -3,33 +3,26 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
-
 from statsmodels.formula.api import ols
 import statsmodels.api as sm
-
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import MinMaxScaler,LabelEncoder
 from boruta import BorutaPy
 from sklearn.feature_selection import RFECV
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-
 from sklearn.linear_model import LinearRegression
 from sklearn.linear_model import LogisticRegression
 from sklearn import metrics
-
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier 
 from sklearn.naive_bayes import GaussianNB
 from xgboost import XGBClassifier
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
-
 from sklearn.metrics import roc_curve
 from sklearn.metrics import roc_auc_score
-
 from mlxtend.frequent_patterns import fpgrowth
 from mlxtend.frequent_patterns import association_rules
-
 import warnings
 warnings.filterwarnings('ignore')
 
