@@ -164,6 +164,26 @@ for i in ax.containers:
     ax.bar_label(i,)
 st.pyplot(q5plot1)
 
+##########################################################################################################################################################
+#QUESTION 6
+st.subheader('Question 5')
+st.text('Association Rule Mining')
+st.text('What are the most common characteristics of customers that are most likely to come to the laundry shops?')
+
+q6 = df[['Race','Gender','Body_Size','With_Kids','Kids_Category','Basket_colour','Attire','Shirt_Colour','shirt_type','Pants_Colour','pants_type','Wash_Item','Day','Time_Of_The_Day','Spectacles']]
+
+# one-hot encoding
+oneh = pd.get_dummies(q6)
+
+# Find frequent item sets using the FP-growth algorithm
+frequent_item_sets = fpgrowth(oneh, min_support=0.10, use_colnames=True)
+
+# Compute association rules
+rules = association_rules(frequent_item_sets, metric='confidence', min_threshold=0.3)
+
+# Display the association rules
+st.dataframe(rules)
+
 ###########################################################################################################################################################################
 ###########################################################################################################################################################################
 ###########################################################################################################################################################################
@@ -504,22 +524,6 @@ st.subheader('Regression for Logistic Regression')
 
 ###########################################################################################################################################################################
 ###########################################################################################################################################################################
-
-st.subheader('Association Rule Mining')
-
-q6 = df[['Race','Gender','Body_Size','With_Kids','Kids_Category','Basket_colour','Attire','Shirt_Colour','shirt_type','Pants_Colour','pants_type','Wash_Item','Day','Time_Of_The_Day','Spectacles']]
-
-# one-hot encoding
-oneh = pd.get_dummies(q6)
-
-# Find frequent item sets using the FP-growth algorithm
-frequent_item_sets = fpgrowth(oneh, min_support=0.10, use_colnames=True)
-
-# Compute association rules
-rules = association_rules(frequent_item_sets, metric='confidence', min_threshold=0.3)
-
-# Display the association rules
-st.dataframe(rules)
 
 
 if st.button('Attach files to email'):
