@@ -154,11 +154,11 @@ kmeans.fit(q5cl)
 # Get the cluster labels for each data point
 q5['labels'] = kmeans.predict(q5cl)
 
-q5plot = plt.figure(figsize=(7,7))
+q5plot = plt.figure(figsize=(7,5))
 ax = sns.scatterplot(x="Age_Range", y="TimeSpent_minutes", hue="labels", data=q5,palette='rocket',legend='full')
 st.pyplot(q5plot)
 
-q5plot1 = plt.figure(figsize=(5,5))
+q5plot1 = plt.figure(figsize=(7,5))
 q5 = q5.groupby('labels').sum('buyDrink').reset_index()
 ax = sns.barplot(data=q5, x="labels", y="buyDrink",palette='rocket')
 for i in ax.containers:
