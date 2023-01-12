@@ -526,6 +526,14 @@ st.subheader('Regression for Logistic Regression')
 ###########################################################################################################################################################################
 
 
-if st.button('Attach files to email'):
+with open("test.html", "rb") as html_file:
+    PDFbyte = html_file.read()
+
+st.download_button(label="Export_Report",
+                    data=PDFbyte,
+                    file_name="test.pdf",
+                    mime='application/octet-stream')
+
+if st.button('Email Report'):
     #webbrowser.open(f'mailto:?subject={subject}&body={message}&attach={uploaded_file}')
     st.success('Files attached to email!')
