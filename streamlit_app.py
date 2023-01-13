@@ -3,26 +3,24 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
+from numpy import mean,std
 from statsmodels.formula.api import ols
 import statsmodels.api as sm
 from sklearn.cluster import KMeans
-from sklearn.preprocessing import MinMaxScaler,LabelEncoder
 from boruta import BorutaPy
 from sklearn.feature_selection import RFECV
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LinearRegression
-from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split, GridSearchCV, RepeatedStratifiedKFold, cross_val_score
+from sklearn.preprocessing import MinMaxScaler,LabelEncoder,StandardScaler
+from sklearn.linear_model import LinearRegression,LogisticRegression
 from sklearn import metrics
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, StackingClassifier
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier 
 from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_curve, roc_auc_score
+
 from xgboost import XGBClassifier
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
-from sklearn.metrics import roc_curve
-from sklearn.metrics import roc_auc_score
-from mlxtend.frequent_patterns import fpgrowth
-from mlxtend.frequent_patterns import association_rules
+from mlxtend.frequent_patterns import fpgrowth, association_rules
 import webbrowser
 import warnings
 warnings.filterwarnings('ignore')
@@ -35,6 +33,21 @@ smote = pd.read_csv('Data_Smote.csv')
 
 df_encode = df.copy()
 df_encode = df_encode.apply(LabelEncoder().fit_transform)
+
+df_onehot = df.copy()
+
+col_vars = [col for col in df_onehot.columns.tolist() if df_onehot[col].dtype.name == "object"]
+
+for var in col_vars:
+    col_list = 'var'+'_'+var
+    col_list = pd.get_dummies(df_onehot[var], prefix = var)
+    df_temp = df_onehot.join(col_list)
+    df_onehot = df_temp
+
+df_vars = df_onehot.columns.values.tolist()
+to_keep = [i for i in df_vars if i not in col_vars]
+df_onehot = df_onehot[to_keep]
+df_onehot.head()
 
 st.title('Data Mining Project')
 st.header('Member')
@@ -625,11 +638,130 @@ st.text("Accuracy of XGBoost using Top 10 features: "+ str(round(acc_top10xg_smo
 ###########################################################################################################################################################################
 st.subheader('Hyperparameter')
 
+nb = GaussianNB()
+
+#create X and y dataset
+y = top5_df["buyDrink"]
+X = top5_df.drop("buyDrink", axis = 1)
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state=50)
+
+params_nb = {'var_smoothing': [1e-9, 1e-8, 1e-7, 1e-6, 1e-5]}
+
+grid_nb = GridSearchCV(estimator=nb, param_grid=params_nb, scoring='accuracy', verbose= 2)
+grid_nb.fit(X_train, y_train)
+
+# Extract best model from 'grid_nb'
+best_model = grid_nb.best_estimator_
+
+# Predict the test set labels
+y_pred = best_model.predict(X_test)
+
+# accuracy and AUC
+st.text('\nAccuracy of Tuned Naive Bayes Using Top-5 features: {:.4f}'.format(best_model.score(X_test, y_test)))
+
+# get the auc score
+prob_nb = best_model.predict_proba(X_test)
+prob_nb = prob_nb[:, 1]
+
+auc_nb = roc_auc_score(y_test, prob_nb)
+st.text('AUC: %.2f' % auc_nb)
+
+xg = XGBClassifier()
+#create X and y dataset (top-5 features)
+y = top5_df["buyDrink"]
+X = top5_df.drop("buyDrink", axis = 1)
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state=50)
+
+params_xg = {'learning_rate': [0.1, 0.01, 0.001],
+            'max_depth': [3, 5, 7],}
+
+grid_xg = GridSearchCV(estimator=xg, param_grid=params_xg, scoring='accuracy', verbose= 2)
+grid_xg.fit(X_train, y_train)
+
+# Extract best model from 'grid_xg'
+best_model = grid_xg.best_estimator_
+
+# Predict the test set labels
+y_pred = best_model.predict(X_test)
+
+# accuracy and  AUC score
+st.text('Accuracy of Tuned Xgboost classifier Using Top-5 features: {:.4f}'.format(best_model.score(X_test, y_test)))
+
+# get the auc score
+prob_xg = best_model.predict_proba(X_test)
+prob_xg = prob_xg[:, 1]
+
+auc_xg = roc_auc_score(y_test, prob_xg)
+st.text('AUC: %.2f' % auc_xg)
+
+# Plot ROC Curve
+fpr_NB, tpr_NB, thresholds_NB = roc_curve(y_test, prob_nb) 
+fpr_XG, tpr_XG, thresholds_XG = roc_curve(y_test, prob_xg) 
+
+hyper = plt.figure(figsize = (15,12))
+plt.plot(fpr_XG, tpr_XG, color='orange', label='XGBoost') 
+plt.plot(fpr_NB, tpr_NB, color='blue', label='NB') 
+plt.plot([0, 1], [0, 1], color='green', linestyle='--')
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Receiver Operating Characteristic (ROC) Curve for Hyperparameter Tuning')
+plt.legend()
+
+st.markdown('**ROC For Hyperparameter Tuning For XGBoost and Naive Bayes**')
+st.pyplot(hyper)
 
 ###########################################################################################################################################################################
 ###########################################################################################################################################################################
 
 st.subheader('Ensemble')
+# get a stacking ensemble of models
+def get_stacking():
+    # define the base models
+    level0 = list()
+    level0.append(('knn', KNeighborsClassifier()))
+    level0.append(('cart', DecisionTreeClassifier()))
+    level0.append(('rf', RandomForestClassifier()))    
+    
+    # define the stacking ensemble
+    level1 = RandomForestClassifier()     
+    model = StackingClassifier(estimators=level0, final_estimator=level1, cv=5)
+    return model
+
+# evaluate a given model using cross-validation
+def evaluate_model(model, X, y):
+    cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
+    scores = cross_val_score(model, X, y, scoring='f1', cv=cv, n_jobs=-1, error_score='raise')
+    return scores
+
+y = df_onehot.buyDrink
+X = df_onehot.drop("buyDrink", 1)
+colnames = X.columns
+
+# Train-Test-Split using 20% test data
+X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.2) 
+
+# construct a list of models in a dictionary
+models = dict()
+
+models['nb'] = GaussianNB()
+models['xgboost'] = XGBClassifier()
+models['stacking'] = get_stacking()
+
+results, names = list(), list()
+
+for name,model in models.items():
+    scores = evaluate_model(model,X,y)
+    results.append(scores)
+    names.append(name)
+    print('>%s %.3f (%.3f)' % (name,mean(scores),std(scores)))
+
+# plot model performance for comparison
+ensemble = plt.figure(figsize = (15,12))
+plt.boxplot(results, labels=names, showmeans=True)
+plt.title('Stacking Ensemble Comparisons')
+st.pyplot(ensemble)
 
 ###########################################################################################################################################################################
 ###########################################################################################################################################################################
