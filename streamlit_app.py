@@ -768,8 +768,8 @@ mae = mean_absolute_error(y_test, predicted)
 # Calculate R-squared
 r2 = r2_score(y_test, predicted)
 
-st.text("MAE Score = ",mae)
-st.text("R2 Score  = ",r2)
+st.text("MAE Score = "+ str(mae))
+st.text("R2 Score  = "+ str(r2))
 
 #Plot Line Plot
 lr = plt.figure(figsize = (10,8))
