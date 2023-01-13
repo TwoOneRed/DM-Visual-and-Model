@@ -769,7 +769,7 @@ mae = mean_absolute_error(y_test, predicted)
 r2 = r2_score(y_test, predicted)
 
 st.text("MAE Score = "+ str(mae))
-st.text("R2 Score  = "+ str(r2)
+st.text("R2 Score  = "+ str(r2))
 
 #Plot Line Plot
 lr = plt.figure(figsize = (10,8))
