@@ -23,6 +23,7 @@ from xgboost import XGBClassifier
 from mlxtend.frequent_patterns import fpgrowth, association_rules
 import webbrowser
 import warnings
+import pickle
 warnings.filterwarnings('ignore')
 
 
@@ -638,7 +639,6 @@ st.text("Accuracy of XGBoost using Top 10 features: "+ str(round(acc_top10xg_smo
 ###########################################################################################################################################################################
 st.subheader('Hyperparameter')
 
-nb = GaussianNB()
 
 #create X and y dataset
 y = top5_df["buyDrink"]
@@ -646,13 +646,9 @@ X = top5_df.drop("buyDrink", axis = 1)
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state=50)
 
-params_nb = {'var_smoothing': [1e-9, 1e-8, 1e-7, 1e-6, 1e-5]}
+best_model = pickle.load(open('nb.hyperparameter','rb'))
 
-grid_nb = GridSearchCV(estimator=nb, param_grid=params_nb, scoring='accuracy', verbose= 2)
-grid_nb.fit(X_train, y_train)
-
-# Extract best model from 'grid_nb'
-best_model = grid_nb.best_estimator_
+best_model = best_model.best_estimator_
 
 # Predict the test set labels
 y_pred = best_model.predict(X_test)
@@ -667,21 +663,17 @@ prob_nb = prob_nb[:, 1]
 auc_nb = roc_auc_score(y_test, prob_nb)
 st.text('AUC: %.2f' % auc_nb)
 
-xg = XGBClassifier()
+
 #create X and y dataset (top-5 features)
 y = top5_df["buyDrink"]
 X = top5_df.drop("buyDrink", axis = 1)
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state=50)
 
-params_xg = {'learning_rate': [0.1, 0.01, 0.001],
-            'max_depth': [3, 5, 7],}
-
-grid_xg = GridSearchCV(estimator=xg, param_grid=params_xg, scoring='accuracy', verbose= 2)
-grid_xg.fit(X_train, y_train)
+best_model = pickle.load(open('xgboost.hyperparameter','rb'))
 
 # Extract best model from 'grid_xg'
-best_model = grid_xg.best_estimator_
+best_model = best_model.best_estimator_
 
 # Predict the test set labels
 y_pred = best_model.predict(X_test)
