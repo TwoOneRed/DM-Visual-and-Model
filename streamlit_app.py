@@ -399,7 +399,7 @@ plt.ylabel('True Positive Rate')
 plt.title('Receiver Operating Characteristic (ROC) Curve for NB')
 plt.legend()
 
-st.text("ROC Curve For Naive Bayes")
+st.markdown("**ROC Curve For Naive Bayes**")
 st.pyplot(rocnb)
 
 ###########################################################################################################################################################################
@@ -472,7 +472,7 @@ plt.ylabel('True Positive Rate')
 plt.title('Receiver Operating Characteristic (ROC) Curve for NB using SMOTE Dataset')
 plt.legend()
 
-st.text("ROC Curve For Naive Bayes with SMOTE")
+st.markdown("**ROC Curve For Naive Bayes with SMOTE**")
 st.pyplot(nbsmote)
 
 ###########################################################################################################################################################################
@@ -542,7 +542,7 @@ plt.ylabel('True Positive Rate')
 plt.title('Receiver Operating Characteristic (ROC) Curve for XGBoost')
 plt.legend()
 
-st.text("ROC Curve For XGBoost")
+st.markdown("**ROC Curve For XGBoost**")
 st.pyplot(xgb)
 ###########################################################################################################################################################################
 
@@ -605,20 +605,20 @@ plt.ylabel('True Positive Rate')
 plt.title('Receiver Operating Characteristic (ROC) Curve for XGBoost using SMOTE dataset')
 plt.legend()
 
-st.text("ROC Curve For XGBoost with SMOTE")
+st.markdown("**ROC Curve For XGBoost with SMOTE**")
 st.pyplot(xgbsmote)
 
 st.markdown('**Accuracy For Non-Smote Dataset**')
-st.text("Accuracy of NB using Top 5 features: ", round(acc_top5nb, 4))
-st.text("Accuracy of NB using Top 10 features: ", round(acc_top10nb, 4))
-st.text("Accuracy of XGBoost using Top 5 features: ", round(acc_top5xg, 4))  
-st.text("Accuracy of XGBoost using Top 10 features: ", round(acc_top10xg, 4))  
+st.text("Accuracy of NB using Top 5 features: "+ str(round(acc_top5nb, 4)))
+st.text("Accuracy of NB using Top 10 features: "+ str(round(acc_top10nb, 4)))
+st.text("Accuracy of XGBoost using Top 5 features: "+ str(round(acc_top5xg, 4)))  
+st.text("Accuracy of XGBoost using Top 10 features: "+ str(round(acc_top10xg, 4)))
 
 st.markdown('**Accuracy For Smote Dataset**')
-st.text("Accuracy of NB using Top 5 features: ", round(acc_top5nb_smote, 4))
-st.text("Accuracy of NB using Top 10 features: ", round(acc_top10nb_smote, 4))
-st.text("Accuracy of XGBoost using Top 5 features: ", round(acc_top5xg_smote, 4))  
-st.text("Accuracy of XGBoost using Top 10 features: ", round(acc_top10xg_smote, 4))  
+st.text("Accuracy of NB using Top 5 features: "+ str(round(acc_top5nb_smote, 4)))
+st.text("Accuracy of NB using Top 10 features: "+ str(round(acc_top10nb_smote, 4)))
+st.text("Accuracy of XGBoost using Top 5 features: "+ str(round(acc_top5xg_smote, 4)))
+st.text("Accuracy of XGBoost using Top 10 features: "+ str(round(acc_top10xg_smote, 4)))
 
 
 ###########################################################################################################################################################################
