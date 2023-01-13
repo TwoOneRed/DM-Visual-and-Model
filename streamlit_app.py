@@ -264,7 +264,7 @@ plt.title('RFE BOTTOM 10')
 plt.bar(rfe_score.tail(10)['Features'], rfe_score.tail(10)['Score'])
 
 st.text('Display Top-10 and Bottom-10 Features in barchart (RFE)')
-st.pyploy(rfe)
+st.pyplot(rfe)
 
 st.subheader('Feature Comparison')
 
