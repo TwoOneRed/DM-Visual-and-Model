@@ -399,9 +399,8 @@ plt.ylabel('True Positive Rate')
 plt.title('Receiver Operating Characteristic (ROC) Curve for NB')
 plt.legend()
 
+st.text("ROC Curve For Naive Bayes")
 st.pyplot(rocnb)
-
-
 
 ###########################################################################################################################################################################
 
@@ -412,38 +411,23 @@ top5_df_smote = smote[["dew", "humidity", "windspeed", "Age_Range", "sealevelpre
 y = top5_df_smote["buyDrink"]
 X = top5_df_smote.drop("buyDrink", axis = 1)
 
-values = []
+#Split train-test dataset
+X_train, X_test, y_train, y_test_top5 = train_test_split(X, y, test_size=0.2, random_state = 50)
+
 top5_nb_smote = GaussianNB()
 
-for i in range(1, 50):
-    #Split train-test dataset
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-    top5_nb_smote.fit(X_train, y_train)
-    y_pred = top5_nb_smote.predict(X_test)
-    values.append(top5_nb_smote.score(X_test, y_test))
-    
-acc = sum(values)/len(values)
-st.text("Average Accuracy: {:.4f}".format(acc))
+top5_nb_smote.fit(X_train, y_train)
+y_pred = top5_nb_smote.predict(X_test)
+
+acc_top5nb_smote = top5_nb_smote.score(X_test, y_test_top5)
+st.text("Accuracy: {:.4f}".format(acc_top5nb_smote))
 
 # get the auc score
-prob_NB = top5_nb_smote.predict_proba(X_test)
-prob_NB = prob_NB[:, 1]
+prob_top5NB = top5_nb.predict_proba(X_test)
+prob_top5NB = prob_top5NB[:, 1]
 
-auc_NB = roc_auc_score(y_test, prob_NB)
-st.text('AUC: %.2f' % auc_NB)
-
-# Plot ROC Curve
-fpr_NB, tpr_NB, thresholds_NB = roc_curve(y_test, prob_NB) 
-
-smotenb5 = plt.figure(figsize=(10,8))
-plt.plot(fpr_NB, tpr_NB, color='orange', label='NB') 
-plt.plot([0, 1], [0, 1], color='green', linestyle='--')
-plt.xlabel('False Positive Rate')
-plt.ylabel('True Positive Rate')
-plt.title('Receiver Operating Characteristic (ROC) Curve for NB using top 5 features')
-plt.legend()
-st.pyplot(smotenb5)
-
+auc_top5NB_smote = roc_auc_score(y_test_top5, prob_top5NB)
+st.text('AUC: %.2f' % auc_top5NB_smote)
 
 
 ###########################################################################################################################################################################
@@ -456,37 +440,40 @@ top10_df_smote = smote[["dew", "humidity", "windspeed", "Age_Range", "sealevelpr
 y = top10_df_smote["buyDrink"]
 X = top10_df_smote.drop("buyDrink", axis = 1)
 
-values = []
+#Split train-test dataset
+X_train, X_test, y_train, y_test_top10 = train_test_split(X, y, test_size=0.2, random_state = 50)
+
 top10_nb_smote = GaussianNB()
 
-for i in range(1, 50):
-    #Split train-test dataset
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-    top10_nb_smote.fit(X_train, y_train)
-    y_pred = top10_nb_smote.predict(X_test)
-    values.append(top10_nb_smote.score(X_test, y_test))
-    
-acc = sum(values)/len(values)
-st.text("Average Accuracy: {:.4f}".format(acc))
+top10_nb_smote.fit(X_train, y_train)
+y_pred = top10_nb_smote.predict(X_test)
+
+acc_top10nb_smote = top10_nb_smote.score(X_test, y_test_top10)
+st.text("Accuracy: {:.4f}".format(acc_top10nb_smote))
 
 # get the auc score
-prob_NB = top10_nb_smote.predict_proba(X_test)
-prob_NB = prob_NB[:, 1]
+prob_top10NB = top10_nb.predict_proba(X_test)
+prob_top10NB = prob_top10NB[:, 1]
 
-auc_NB = roc_auc_score(y_test, prob_NB)
-st.text('AUC: %.2f' % auc_NB)
+auc_top10NB_smote = roc_auc_score(y_test_top10, prob_top10NB)
+st.text('AUC: %.2f' % auc_top10NB_smote)
 
-# Plot ROC Curve
-fpr_NB, tpr_NB, thresholds_NB = roc_curve(y_test, prob_NB) 
+###########################################################################################################################################################################
+# Plot ROC Curve FOR SMOTE NB
+fpr_top5NB, tpr_top5NB, thresholds_top5NB = roc_curve(y_test_top5, prob_top5NB) 
+fpr_top10NB, tpr_top10NB, thresholds_top10NB = roc_curve(y_test_top10, prob_top10NB) 
 
-smotenb10 = plt.figure(figsize=(10,8))
-plt.plot(fpr_NB, tpr_NB, color='orange', label='NB') 
+nbsmote = plt.figure(figsize = (15,12))
+plt.plot(fpr_top5NB, tpr_top5NB, color='orange', label='Top-5 features') 
+plt.plot(fpr_top10NB, tpr_top10NB, color='blue', label='Top-10 features') 
 plt.plot([0, 1], [0, 1], color='green', linestyle='--')
 plt.xlabel('False Positive Rate')
 plt.ylabel('True Positive Rate')
-plt.title('Receiver Operating Characteristic (ROC) Curve for NB using top 10 features')
+plt.title('Receiver Operating Characteristic (ROC) Curve for NB using SMOTE Dataset')
 plt.legend()
-st.pyplot(smotenb10)
+
+st.text("ROC Curve For Naive Bayes with SMOTE")
+st.pyplot(nbsmote)
 
 ###########################################################################################################################################################################
 ###########################################################################################################################################################################
@@ -494,28 +481,155 @@ st.pyplot(smotenb10)
 st.subheader("Classification For XGBoost")
 st.markdown("**XGBoost Top 5 Features**")
 
+y = top5_df["buyDrink"]
+X = top5_df.drop("buyDrink", axis = 1)
+
+top5_xg = XGBClassifier()
+
+#Split train-test dataset
+X_train, X_test, y_train, y_test_top5 = train_test_split(X, y, test_size=0.2, stratify = y, random_state = 20)
+    
+top5_xg.fit(X_train, y_train)
+y_pred = top5_xg.predict(X_test)
+
+acc_top5xg = top5_xg.score(X_test, y_test_top5)
+st.text("Accuracy: {:.4f}".format(acc_top5xg))
+
+# get the auc score
+prob_top5XG = top5_xg.predict_proba(X_test)
+prob_top5XG = prob_top5XG[:, 1]
+
+auc_top5XG = roc_auc_score(y_test_top5, prob_top5XG)
+st.text('AUC: %.2f' % auc_top5XG)
 
 ###########################################################################################################################################################################
 
 st.markdown("**XGBoost Top 10 Features**")
 
+#create X and y dataset
+y = top10_df["buyDrink"]
+X = top10_df.drop("buyDrink", axis = 1)
+
+#Split train-test dataset
+X_train, X_test, y_train, y_test_top10 = train_test_split(X, y, test_size=0.2, stratify = y, random_state = 20)
+      
+top10_xg = XGBClassifier()
+
+top10_xg.fit(X_train, y_train)
+y_pred = top10_xg.predict(X_test)
+
+acc_top10xg = top10_xg.score(X_test, y_test_top10)
+st.text("Accuracy: {:.4f}".format(acc_top10xg))
+
+# get the auc score
+prob_top10XG = top10_xg.predict_proba(X_test)
+prob_top10XG = prob_top10XG[:, 1]
+
+auc_top10XG = roc_auc_score(y_test_top10, prob_top10XG)
+st.text('AUC: %.2f' % auc_top10XG)
+
+###########################################################################################################################################################################
+# Plot ROC Curve XGBOOST
+fpr_top5XG, tpr_top5XG, thresholds_top5XG = roc_curve(y_test_top5, prob_top5XG) 
+fpr_top10XG, tpr_top10XG, thresholds_top10XG = roc_curve(y_test_top10, prob_top10XG) 
+
+xgb = plt.figure(figsize = (15,12))
+plt.plot(fpr_top5XG, tpr_top5XG, color='orange', label='Top-5 features') 
+plt.plot(fpr_top10XG, tpr_top10XG, color='blue', label='Top-10 features') 
+plt.plot([0, 1], [0, 1], color='green', linestyle='--')
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Receiver Operating Characteristic (ROC) Curve for XGBoost')
+plt.legend()
+
+st.text("ROC Curve For XGBoost")
+st.pyplot(xgb)
 ###########################################################################################################################################################################
 
 st.markdown("**XGBoost With SMOTE datasets (top 5 features)**")
+#create X and y dataset
+y = top5_df_smote["buyDrink"]
+X = top5_df_smote.drop("buyDrink", axis = 1)
+
+#Split train-test dataset
+X_train, X_test, y_train, y_test_top5 = train_test_split(X, y, test_size=0.2, stratify = y, random_state = 40)
+    
+top5_xg.fit(X_train, y_train)
+y_pred = top5_xg.predict(X_test)
+
+acc_top5xg_smote = top5_xg.score(X_test, y_test_top5)
+st.text("Accuracy: {:.4f}".format(acc_top5xg_smote))
+
+# get the auc score
+prob_top5XG = top5_xg.predict_proba(X_test)
+prob_top5XG = prob_top5XG[:, 1]
+
+auc_top5XG_smote = roc_auc_score(y_test_top5, prob_top5XG)
+st.text('AUC: %.2f' % auc_top5XG_smote)
 
 ###########################################################################################################################################################################
 
 st.markdown("**XGBoost With SMOTE datasets (top 10 features)**")
+#### create X and y dataset
+y = top10_df_smote["buyDrink"]
+X = top10_df_smote.drop("buyDrink", axis = 1)
+
+#Split train-test dataset
+X_train, X_test, y_train, y_test_top10 = train_test_split(X, y, test_size=0.2, stratify = y, random_state = 40)
+      
+top10_xg = XGBClassifier()
+
+top10_xg.fit(X_train, y_train)
+y_pred = top10_xg.predict(X_test)
+
+acc_top10xg_smote = top10_xg.score(X_test, y_test_top10)
+st.text("Accuracy: {:.4f}".format(acc_top10xg_smote))
+
+# get the auc score
+prob_top10XG = top10_xg.predict_proba(X_test)
+prob_top10XG = prob_top10XG[:, 1]
+
+auc_top10XG_smote = roc_auc_score(y_test_top10, prob_top10XG)
+st.text('AUC: %.2f' % auc_top10XG_smote)
+###########################################################################################################################################################################
+# Plot ROC Curve
+fpr_top5XG, tpr_top5XG, thresholds_top5XG = roc_curve(y_test_top5, prob_top5XG) 
+fpr_top10XG, tpr_top10XG, thresholds_top10XG = roc_curve(y_test_top10, prob_top10XG) 
+
+xgbsmote = plt.figure(figsize = (15,12))
+plt.plot(fpr_top5XG, tpr_top5XG, color='orange', label='Top-5 features') 
+plt.plot(fpr_top10XG, tpr_top10XG, color='blue', label='Top-10 features') 
+plt.plot([0, 1], [0, 1], color='green', linestyle='--')
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Receiver Operating Characteristic (ROC) Curve for XGBoost using SMOTE dataset')
+plt.legend()
+
+st.text("ROC Curve For XGBoost with SMOTE")
+st.pyplot(xgbsmote)
+
+st.markdown('**Accuracy For Non-Smote Dataset**')
+st.text("Accuracy of NB using Top 5 features: ", round(acc_top5nb, 4))
+st.text("Accuracy of NB using Top 10 features: ", round(acc_top10nb, 4))
+st.text("Accuracy of XGBoost using Top 5 features: ", round(acc_top5xg, 4))  
+st.text("Accuracy of XGBoost using Top 10 features: ", round(acc_top10xg, 4))  
+
+st.markdown('**Accuracy For Smote Dataset**')
+st.text("Accuracy of NB using Top 5 features: ", round(acc_top5nb_smote, 4))
+st.text("Accuracy of NB using Top 10 features: ", round(acc_top10nb_smote, 4))
+st.text("Accuracy of XGBoost using Top 5 features: ", round(acc_top5xg_smote, 4))  
+st.text("Accuracy of XGBoost using Top 10 features: ", round(acc_top10xg_smote, 4))  
+
+
+###########################################################################################################################################################################
+###########################################################################################################################################################################
+st.subheader('Hyperparameter')
+
 
 ###########################################################################################################################################################################
 ###########################################################################################################################################################################
 
 st.subheader('Ensemble')
-
-###########################################################################################################################################################################
-###########################################################################################################################################################################
-
-st.subheader('Hyperparameter')
 
 ###########################################################################################################################################################################
 ###########################################################################################################################################################################
