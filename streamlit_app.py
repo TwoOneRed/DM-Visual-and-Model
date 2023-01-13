@@ -65,6 +65,7 @@ q1 = q1.groupby('Race').sum('buyDrink').reset_index()
 
 q1plt = plt.figure(figsize=(10,4))
 ax = sns.barplot(x='Race', y='buyDrink', data=q1)
+plt.title('The number of people buying drinks by Race')
 for i in ax.containers:
     ax.bar_label(i,)
 
@@ -83,6 +84,7 @@ q2 = q2.groupby(['Basket_Size','With_Kids']).sum('buyDrink').round(2).reset_inde
 #1 Chart
 q2plt = plt.figure(figsize=(7,5))
 ax = sns.barplot(x='Basket_Size', y='buyDrink', hue='With_Kids', data=q2)
+plt.title('Impact of Kids on Basket Size and Drink Purchases')
 
 for i in ax.containers:
     ax.bar_label(i,)
@@ -103,16 +105,16 @@ st.dataframe(sm.stats.anova_lm(model, typ=2))
 ##########################################################################################################################################################
 #QUESTION 3
 
-#st.subheader('Question 3')
-#st.text('Any correlations between weather information and number of people buying drinks?')
+st.subheader('Question 3')
+st.text('Any correlations between weather information and number of people buying drinks?')
 
+q3 = df[['temp', 'humidity', 'windspeed','cloudcover', 'visibility', 'buyDrink']].reset_index(drop=True)
 
-#q3 = df[['temp', 'humidity', 'windspeed','cloudcover', 'visibility', 'buyDrink']].reset_index(drop=True)
+q3plt = plt.figure(figsize=(7,5))
+ax = sns.pairplot(q3, hue ='buyDrink')
+ax.fig.suptitle("The relationships between weather and number of prople buying drinks")
 
-#q3plt = plt.figure(figsize=(7,5))
-#ax = sns.pairplot(q3, hue ='buyDrink')
-
-#st.pyplot(q3plt)
+st.pyplot(q3plt)
 
 ##########################################################################################################################################################
 #QUESTION 4
@@ -155,6 +157,7 @@ q5['labels'] = kmeans.predict(q5cl)
 
 q5plot = plt.figure(figsize=(7,5))
 ax = sns.scatterplot(x="Age_Range", y="TimeSpent_minutes", hue="labels", data=q5,palette='rocket',legend='full')
+plt.title('Age Range vs Time Spent: K-means Clustering Analysis of Laundry Shop Customers"')
 st.pyplot(q5plot)
 
 q5plot1 = plt.figure(figsize=(7,5))
@@ -191,6 +194,7 @@ st.dataframe(rules)
 st.header('PART 2. Feature Selection')
 st.subheader('BORUTA Features')
 
+# Feature selection using BORUTA
 rf = RandomForestClassifier(n_jobs=-1, class_weight="balanced_subsample", max_depth=5)
 boruta = BorutaPy(rf, n_estimators="auto", random_state=1)
 
@@ -198,35 +202,41 @@ y = df_encode["buyDrink"]
 X = df_encode.drop("buyDrink", axis = 1)
 colnames = X.columns
 
-# use 80-20 split, random state = 10
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=10)
-
 def ranking(ranks, names, order=1):
     minmax = MinMaxScaler()
     ranks = minmax.fit_transform(order*np.array([ranks]).T).T[0]
     ranks = map(lambda x: round(x,2), ranks)
     return dict(zip(names, ranks))
 
-boruta.fit(np.array(X), np.array(y))
+boruta.fit(X.values, y.values.ravel())
 
 boruta_score = ranking(list(map(float, boruta.ranking_)), colnames, order=-1)
 boruta_score = pd.DataFrame(list(boruta_score.items()), columns=['Features', 'Score'])
 boruta_score = boruta_score.sort_values("Score", ascending = False)
 
-st.text('BORUTA Top 10 Features')
-bortop10 = plt.figure(figsize=(15,5))
-plt.title('TOP 10')
+st.text('Boruta Top 10 Features')
+st.dataframe(boruta_score.head(10))
+
+st.text('Boruta Bottom 10 Features')
+st.dataframe(boruta_score.tail(10))
+
+bor = plt.figure(figsize=(20,10))
+
+plt.subplot(2,1,1)
+plt.title('BORUTA TOP 10')
 plt.bar(boruta_score.head(10)['Features'], boruta_score.head(10)['Score'])
 
-st.dataframe(boruta_score.head(10))
-st.pyplot(bortop10)
-
-st.text('BORUTA Bottom 10 Features')
-borbot10 = plt.figure(figsize=(15,5))
-plt.title('BOTTOM 10')
+plt.subplot(2,1,2)
+plt.title('BORUTA BOTTOM 10')
 plt.bar(boruta_score.tail(10)['Features'], boruta_score.tail(10)['Score'])
-st.dataframe(boruta_score.tail(10))
-st.pyplot(borbot10)
+
+st.text('Display Top-10 and Bottom-10 Features in barchart (BORUTA)')
+st.pyplot(bor)
+
+###########################################################################################################################################################################
+###########################################################################################################################################################################
+
+st.subheader('Recursive feature elimination (RFE) Features')
 
 rf = RandomForestClassifier(n_jobs=-1,class_weight='balanced_subsample',max_depth = 5,n_estimators=20,random_state=1)
 rf.fit(X,y)
@@ -237,26 +247,24 @@ rfe_score = ranking(list(map(float, rfe.ranking_)), colnames, order=-1)
 rfe_score = pd.DataFrame(list(rfe_score.items()), columns=['Features', 'Score'])
 rfe_score = rfe_score.sort_values("Score", ascending = False)
 
-###########################################################################################################################################################################
-###########################################################################################################################################################################
-
-st.subheader('Recursive feature elimination (RFE) Features')
-st.text('Recursive feature elimination  Top 10 Features')
-
+st.text('RFE Top 10 Feature')
 st.dataframe(rfe_score.head(10))
-rfetop10 = plt.figure(figsize=(15,5))
-plt.title('TOP 10')
-plt.bar(rfe_score.head(10)['Features'], rfe_score.head(10)['Score'])
-st.pyplot(rfetop10)
 
-
-st.text('Recursive feature elimination Bottom 10 Features')
+st.text('RFE Bottom 10 Feature')
 st.dataframe(rfe_score.tail(10))
-rfebot10 = plt.figure(figsize=(15,5))
-plt.title('BOTTOM 10')
-plt.bar(rfe_score.tail(10)['Features'], rfe_score.tail(10)['Score'])
-st.pyplot(rfebot10)
 
+rfe = plt.figure(figsize=(20,10))
+
+plt.subplot(2,1,1)
+plt.title('RFE TOP 10')
+plt.bar(rfe_score.head(10)['Features'], rfe_score.head(10)['Score'])
+
+plt.subplot(2,1,2)
+plt.title('RFE BOTTOM 10')
+plt.bar(rfe_score.tail(10)['Features'], rfe_score.tail(10)['Score'])
+
+st.text('Display Top-10 and Bottom-10 Features in barchart (RFE)')
+st.pyploy(rfe)
 
 st.subheader('Feature Comparison')
 
@@ -303,15 +311,16 @@ boruta_acc_result = pd.DataFrame(list(zip(feature_num,acc_boruta, acc_rfe)),colu
 boruta_acc_result = pd.melt(boruta_acc_result, id_vars = "No_Of_Features",var_name = "Model", value_name = "Accuracy")
 
 # Plot the line charts
-feaComp = plt.figure(figsize=(11.7,8.27))
+comp = plt.figure(figsize=(11.7,8.27))
+
 ax = sns.lineplot(x = "No_Of_Features", y = "Accuracy", hue = "Model", data = boruta_acc_result)
 ax.set(ylim=(0, 100))
 ax.set(title="Accuracy Trend for Different Feature Selections")
-st.pyplot(feaComp)
 
-st.text("Average Accuracy: ")
-st.text("Recursive Feature Elimination = " + str(boruta_acc_result[boruta_acc_result["Model"] == "RFE"]['Accuracy'].mean()))
-st.text("Naive Bayes = " + str(boruta_acc_result[boruta_acc_result["Model"] == "BORUTA"]['Accuracy'].mean()))
+st.text('Accuracy Comparison With Number Of Features and The Accuracy For BORUTA and RFE')
+st.pyplot(comp)
+
+
 
 ###########################################################################################################################################################################
 ###########################################################################################################################################################################
@@ -327,36 +336,23 @@ top5_df = df_encode[["dew", "humidity", "windspeed", "Age_Range", "sealevelpress
 y = top5_df["buyDrink"]
 X = top5_df.drop("buyDrink", axis = 1)
 
-values = []
+#Split train-test dataset
+X_train, X_test, y_train, y_test_top5 = train_test_split(X, y, test_size=0.2, stratify = y, random_state = 20)
+
 top5_nb = GaussianNB()
 
-for i in range(1, 50):
-    #Split train-test dataset
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify = y)
-    top5_nb.fit(X_train, y_train)
-    y_pred = top5_nb.predict(X_test)
-    values.append(top5_nb.score(X_test, y_test))
-    
-acc_top5nb = sum(values)/len(values)
-st.text("Average Accuracy: {:.4f}".format(acc_top5nb))
+top5_nb.fit(X_train, y_train)
+y_pred = top5_nb.predict(X_test)
+
+acc_top5nb = top5_nb.score(X_test, y_test_top5)
+st.text("Accuracy: {:.4f}".format(acc_top5nb))
 
 # get the auc score
-prob_NB = top5_nb.predict_proba(X_test)
-prob_NB = prob_NB[:, 1]
-auc_NB = roc_auc_score(y_test, prob_NB)
-st.text('AUC: %.2f' % auc_NB)
+prob_top5NB = top5_nb.predict_proba(X_test)
+prob_top5NB = prob_top5NB[:, 1]
 
-# Plot ROC Curve
-fpr_NB, tpr_NB, thresholds_NB = roc_curve(y_test, prob_NB) 
-
-nb5 = plt.figure(figsize=(10,8))
-plt.plot(fpr_NB, tpr_NB, color='orange', label='NB') 
-plt.plot([0, 1], [0, 1], color='green', linestyle='--')
-plt.xlabel('False Positive Rate')
-plt.ylabel('True Positive Rate')
-plt.title('Receiver Operating Characteristic (ROC) Curve for NB using top 5 features')
-plt.legend()
-st.pyplot(nb5)
+auc_top5NB = roc_auc_score(y_test_top5, prob_top5NB)
+st.text('AUC: %.2f' % auc_top5NB)
 
 ###########################################################################################################################################################################
 
@@ -369,37 +365,43 @@ top10_df = df_encode[["dew", "humidity", "windspeed", "Age_Range", "sealevelpres
 y = top10_df["buyDrink"]
 X = top10_df.drop("buyDrink", axis = 1)
 
-values = []
+#Split train-test dataset
+X_train, X_test, y_train, y_test_top10 = train_test_split(X, y, test_size=0.2, stratify = y, random_state = 20)
+
 top10_nb = GaussianNB()
 
-for i in range(1, 50):
-    #Split train-test dataset
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify = y)
-    top10_nb.fit(X_train, y_train)
-    y_pred = top10_nb.predict(X_test)
-    values.append(top10_nb.score(X_test, y_test))
+top10_nb.fit(X_train, y_train)
+y_pred = top10_nb.predict(X_test)
     
-acc_top10nb = sum(values)/len(values)
-st.text("Average Accuracy: {:.4f}".format(acc_top10nb))
+acc_top10nb = top10_nb.score(X_test, y_test_top10)
+st.text("Accuracy: {:.4f}".format(acc_top10nb))
 
 # get the auc score
-prob_NB = top10_nb.predict_proba(X_test)
-prob_NB = prob_NB[:, 1]
+prob_top10NB = top10_nb.predict_proba(X_test)
+prob_top10NB = prob_top10NB[:, 1]
 
-auc_NB = roc_auc_score(y_test, prob_NB)
-st.text('AUC: %.2f' % auc_NB)
+auc_top10NB = roc_auc_score(y_test_top10, prob_top10NB)
+st.text('AUC: %.2f' % auc_top10NB)
+
+###########################################################################################################################################################################
+#ROC Curve For Top 5 and Top 10 Features
 
 # Plot ROC Curve
-fpr_NB, tpr_NB, thresholds_NB = roc_curve(y_test, prob_NB) 
+fpr_top5NB, tpr_top5NB, thresholds_top5NB = roc_curve(y_test_top5, prob_top5NB) 
+fpr_top10NB, tpr_top10NB, thresholds_top10NB = roc_curve(y_test_top10, prob_top10NB) 
 
-nb10 = plt.figure(figsize=(10,8))
-plt.plot(fpr_NB, tpr_NB, color='orange', label='NB') 
+rocnb = plt.figure(figsize = (15,12))
+plt.plot(fpr_top5NB, tpr_top5NB, color='orange', label='Top-5 features') 
+plt.plot(fpr_top10NB, tpr_top10NB, color='blue', label='Top-10 features') 
 plt.plot([0, 1], [0, 1], color='green', linestyle='--')
 plt.xlabel('False Positive Rate')
 plt.ylabel('True Positive Rate')
-plt.title('Receiver Operating Characteristic (ROC) Curve for NB using top 10 features')
+plt.title('Receiver Operating Characteristic (ROC) Curve for NB')
 plt.legend()
-st.pyplot(nb10)
+
+st.pyplot(rocnb)
+
+
 
 ###########################################################################################################################################################################
 
@@ -441,6 +443,8 @@ plt.ylabel('True Positive Rate')
 plt.title('Receiver Operating Characteristic (ROC) Curve for NB using top 5 features')
 plt.legend()
 st.pyplot(smotenb5)
+
+
 
 ###########################################################################################################################################################################
 
