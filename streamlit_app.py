@@ -353,9 +353,8 @@ X = top5_df.drop("buyDrink", axis = 1)
 #Split train-test dataset
 X_train, X_test, y_train, y_test_top5 = train_test_split(X, y, test_size=0.2, stratify = y, random_state = 20)
 
-top5_nb = GaussianNB()
+top5_nb = pickle.load(open('top5.nb','rb'))
 
-top5_nb.fit(X_train, y_train)
 y_pred = top5_nb.predict(X_test)
 
 acc_top5nb = top5_nb.score(X_test, y_test_top5)
@@ -382,9 +381,8 @@ X = top10_df.drop("buyDrink", axis = 1)
 #Split train-test dataset
 X_train, X_test, y_train, y_test_top10 = train_test_split(X, y, test_size=0.2, stratify = y, random_state = 20)
 
-top10_nb = GaussianNB()
+top10_nb = pickle.load(open('top10.nb','rb'))
 
-top10_nb.fit(X_train, y_train)
 y_pred = top10_nb.predict(X_test)
     
 acc_top10nb = top10_nb.score(X_test, y_test_top10)
@@ -428,9 +426,8 @@ X = top5_df_smote.drop("buyDrink", axis = 1)
 #Split train-test dataset
 X_train, X_test, y_train, y_test_top5 = train_test_split(X, y, test_size=0.2, random_state = 50)
 
-top5_nb_smote = GaussianNB()
+top5_nb_smote = pickle.load(open('top5.nb','rb'))
 
-top5_nb_smote.fit(X_train, y_train)
 y_pred = top5_nb_smote.predict(X_test)
 
 acc_top5nb_smote = top5_nb_smote.score(X_test, y_test_top5)
@@ -457,9 +454,8 @@ X = top10_df_smote.drop("buyDrink", axis = 1)
 #Split train-test dataset
 X_train, X_test, y_train, y_test_top10 = train_test_split(X, y, test_size=0.2, random_state = 50)
 
-top10_nb_smote = GaussianNB()
+top10_nb_smote = pickle.load(open('top10.nb','rb'))
 
-top10_nb_smote.fit(X_train, y_train)
 y_pred = top10_nb_smote.predict(X_test)
 
 acc_top10nb_smote = top10_nb_smote.score(X_test, y_test_top10)
@@ -498,12 +494,11 @@ st.markdown("**XGBoost Top 5 Features**")
 y = top5_df["buyDrink"]
 X = top5_df.drop("buyDrink", axis = 1)
 
-top5_xg = XGBClassifier()
-
 #Split train-test dataset
 X_train, X_test, y_train, y_test_top5 = train_test_split(X, y, test_size=0.2, stratify = y, random_state = 20)
     
-top5_xg.fit(X_train, y_train)
+top5_xg = pickle.load(open('top5.xg','rb'))
+
 y_pred = top5_xg.predict(X_test)
 
 acc_top5xg = top5_xg.score(X_test, y_test_top5)
@@ -527,9 +522,8 @@ X = top10_df.drop("buyDrink", axis = 1)
 #Split train-test dataset
 X_train, X_test, y_train, y_test_top10 = train_test_split(X, y, test_size=0.2, stratify = y, random_state = 20)
       
-top10_xg = XGBClassifier()
+top10_xg = pickle.load(open('top10.xg','rb'))
 
-top10_xg.fit(X_train, y_train)
 y_pred = top10_xg.predict(X_test)
 
 acc_top10xg = top10_xg.score(X_test, y_test_top10)
@@ -568,7 +562,8 @@ X = top5_df_smote.drop("buyDrink", axis = 1)
 #Split train-test dataset
 X_train, X_test, y_train, y_test_top5 = train_test_split(X, y, test_size=0.2, stratify = y, random_state = 40)
     
-top5_xg.fit(X_train, y_train)
+top5_xg = pickle.load(open('top5.xg','rb'))
+
 y_pred = top5_xg.predict(X_test)
 
 acc_top5xg_smote = top5_xg.score(X_test, y_test_top5)
@@ -591,9 +586,8 @@ X = top10_df_smote.drop("buyDrink", axis = 1)
 #Split train-test dataset
 X_train, X_test, y_train, y_test_top10 = train_test_split(X, y, test_size=0.2, stratify = y, random_state = 40)
       
-top10_xg = XGBClassifier()
+top10_xg = pickle.load(open('top10.xg','rb'))
 
-top10_xg.fit(X_train, y_train)
 y_pred = top10_xg.predict(X_test)
 
 acc_top10xg_smote = top10_xg.score(X_test, y_test_top10)
