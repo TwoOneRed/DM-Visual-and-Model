@@ -700,6 +700,20 @@ st.pyplot(hyper)
 
 st.subheader('Ensemble')
 
+# get a stacking ensemble of models
+def get_stacking():
+    # define the base models
+    level0 = list()
+    level0.append(('knn', KNeighborsClassifier()))
+    level0.append(('cart', DecisionTreeClassifier()))
+    level0.append(('rf', RandomForestClassifier()))    
+    
+    # define the stacking ensemble
+    level1 = RandomForestClassifier()     
+    model = StackingClassifier(estimators=level0, final_estimator=level1, cv=5)
+    return model
+
+
 # evaluate a given model using cross-validation
 def evaluate_model(model, X, y):
     cv = RepeatedStratifiedKFold(n_splits=10, n_repeats=3, random_state=1)
@@ -718,7 +732,7 @@ models = dict()
 
 models['nb'] = GaussianNB()
 models['xgboost'] = XGBClassifier()
-models['stacking'] = pickle.load(open('xgboost.hyperparameter','rb'))
+models['stacking'] = get_stacking()
 
 results, names = list(), list()
 
