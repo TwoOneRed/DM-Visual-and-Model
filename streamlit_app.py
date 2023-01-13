@@ -208,6 +208,12 @@ st.dataframe(rules)
 st.header('PART 2. Feature Selection')
 st.subheader('BORUTA Features')
 
+def ranking(ranks, names, order=1):
+    minmax = MinMaxScaler()
+    ranks = minmax.fit_transform(order*np.array([ranks]).T).T[0]
+    ranks = map(lambda x: round(x,2), ranks)
+    return dict(zip(names, ranks))
+
 # Feature selection using BORUTA
 rf = RandomForestClassifier(n_jobs=-1, class_weight="balanced_subsample", max_depth=5)
 boruta = BorutaPy(rf, n_estimators="auto", random_state=1)
@@ -216,13 +222,7 @@ y = df_encode["buyDrink"]
 X = df_encode.drop("buyDrink", axis = 1)
 colnames = X.columns
 
-def ranking(ranks, names, order=1):
-    minmax = MinMaxScaler()
-    ranks = minmax.fit_transform(order*np.array([ranks]).T).T[0]
-    ranks = map(lambda x: round(x,2), ranks)
-    return dict(zip(names, ranks))
-
-boruta.fit(np.array(X), np.array(y))
+boruta = pickle.load(open('boruta.fs','rb'))
 
 boruta_score = ranking(list(map(float, boruta.ranking_)), colnames, order=-1)
 boruta_score = pd.DataFrame(list(boruta_score.items()), columns=['Features', 'Score'])
@@ -252,10 +252,7 @@ st.pyplot(bor)
 
 st.subheader('Recursive feature elimination (RFE) Features')
 
-rf = RandomForestClassifier(n_jobs=-1,class_weight='balanced_subsample',max_depth = 5,n_estimators=20,random_state=1)
-rf.fit(X,y)
-rfe = RFECV(rf,min_features_to_select = 1, cv=2)
-rfe.fit(X,y)
+rfe = pickle.load(open('rfe.fs','rb'))
 
 rfe_score = ranking(list(map(float, rfe.ranking_)), colnames, order=-1)
 rfe_score = pd.DataFrame(list(rfe_score.items()), columns=['Features', 'Score'])
