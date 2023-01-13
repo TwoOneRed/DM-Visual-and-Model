@@ -738,7 +738,7 @@ for name,model in models.items():
     scores = evaluate_model(model,X,y)
     results.append(scores)
     names.append(name)
-    print('>%s %.3f (%.3f)' % (name,mean(scores),std(scores)))
+    st.text('>%s %.3f (%.3f)' % (name,mean(scores),std(scores)))
 
 # plot model performance for comparison
 ensemble = plt.figure(figsize = (15,12))
@@ -751,13 +751,118 @@ st.pyplot(ensemble)
 
 st.subheader('Regression for Linear Regression')
 
+df_LinR = df[['Age_Range','TotalSpent_RM']]
+df_LinR = df_LinR.groupby('Age_Range').mean().reset_index()
+
+#Put Data in X and y
+X = df_LinR[['Age_Range']]     # drop labels from original data
+y = df_LinR[["TotalSpent_RM"]]    # copy the labels to another dataframe/series
+
+#Split The Data
+X_train, X_test, y_train, y_test = train_test_split(X, y,random_state=1)
+#Train The Data
+LinR = LinearRegression().fit(X_train, y_train)
+
+#Predict'
+predicted = LinR.predict(X_test)
+
+result = pd.DataFrame()
+result['Age_Range'] = X_test
+result['Actual'] = y_test
+result['Predicted'] = predicted
+st.dataframe(result)
+
+from sklearn.metrics import mean_absolute_error, r2_score
+
+# Calculate MAE
+mae = mean_absolute_error(y_test, predicted)
+
+# Calculate R-squared
+r2 = r2_score(y_test, predicted)
+
+st.text("MAE Score = ",mae)
+st.text("R2 Score  = ",r2)
+
+#Plot Line Plot
+lr = plt.figure(figsize = (10,8))
+plt.rc('axes', labelsize= 14)
+plt.rc('xtick', labelsize=13)
+
+x = sns.scatterplot(data=result, y="Actual", x="Age_Range" ,label='Previous TotalSpent_RM')
+x = sns.scatterplot(data=result, y="Predicted", x="Age_Range",label='Predicted TotalSpent_RM')
+x.set_title('Previous and Predicted TotalSpent_RM',fontsize=14)
+plt.xlabel('Age Range')
+plt.ylabel('Total Spent (RM)')
+st.pyplot(lr)
+
 ###########################################################################################################################################################################
 
 st.subheader('Regression for Logistic Regression')
+#create X and y dataset
+y = df_encode["buyDrink"]
+X = df_encode.drop("buyDrink", axis = 1)
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, random_state=50)
+
+logreg = LogisticRegression(solver='liblinear', max_iter=200)
+logreg.fit(X_train, y_train)
+
+y_pred = logreg.predict(X_test)
+
+st.text('Accuracy of logistic regression: {:.4f}'.format(logreg.score(X_test, y_test)))
+
+# get the auc score
+prob_logreg = logreg.predict_proba(X_test)
+prob_logreg = prob_logreg[:, 1]
+
+auc_logreg = roc_auc_score(y_test, prob_logreg)
+st.text('AUC: %.2f' % auc_logreg)
+
+fpr_logreg, tpr_logreg, thresholds_logreg = roc_curve(y_test, prob_logreg) 
+
+logr = plt.figure(figsize = (10,8))
+plt.plot(fpr_logreg, tpr_logreg, color='orange', label='Logistic Regression') 
+plt.plot([0, 1], [0, 1], color='green', linestyle='--')
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Receiver Operating Characteristic (ROC) Curve for Logistic Regression')
+plt.legend()
+
+st.pyplot(logr)
+
+
+#create X and y dataset
+y = smote["buyDrink"]
+X = smote.drop("buyDrink", axis = 1)
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state=50)
+
+logreg = LogisticRegression(solver='liblinear', max_iter=200)
+logreg.fit(X_train, y_train)
+
+y_pred = logreg.predict(X_test)
+
+st.text('Accuracy of logistic regression: {:.4f}'.format(logreg.score(X_test, y_test)))
+
+# get the auc score
+prob_logreg = logreg.predict_proba(X_test)
+prob_logreg = prob_logreg[:, 1]
+
+auc_logreg = roc_auc_score(y_test, prob_logreg)
+st.text('AUC: %.2f' % auc_logreg)
+
+fpr_XG, tpr_XG, thresholds_XG = roc_curve(y_test, prob_logreg) 
+
+logrsmote = plt.figure(figsize = (10,8))
+plt.plot(fpr_XG, tpr_XG, color='orange', label='XGBoost') 
+plt.plot([0, 1], [0, 1], color='green', linestyle='--')
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Receiver Operating Characteristic (ROC) Curve for Logistic Regression using SMOTE')
+plt.legend()
 
 ###########################################################################################################################################################################
 ###########################################################################################################################################################################
-
 
 with open("test.html", "rb") as html_file:
     PDFbyte = html_file.read()
