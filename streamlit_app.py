@@ -26,8 +26,12 @@ import warnings
 import pickle
 warnings.filterwarnings('ignore')
 
+st.title('Data Mining Project')
+st.header('Member')
+member = pd.DataFrame({"ID":['1191100280','1191100281','1191100292'],"Name":['Alvin Fong Weng Yew','Tan Sin Zhung','Leong Yi Hong'], "Phone Number":['011-20295617','011-3661060','011-72892995']})
+st.dataframe(member)
 
-uploaded_file = st.file_uploader("Upload Cleaned CSV file", type="csv")
+uploaded_file = st.file_uploader("Upload Cleaned Laundry CSV file", type="csv")
 
 if uploaded_file:
     # Do something with the uploaded file
@@ -58,11 +62,6 @@ df_vars = df_onehot.columns.values.tolist()
 to_keep = [i for i in df_vars if i not in col_vars]
 df_onehot = df_onehot[to_keep]
 df_onehot.head()
-
-st.title('Data Mining Project')
-st.header('Member')
-member = pd.DataFrame({"ID":['1191100280','1191100281','1191100292'],"Name":['Alvin Fong Weng Yew','Tan Sin Zhung','Leong Yi Hong'], "Phone Number":['011-20295617','011-3661060','011-72892995']})
-st.dataframe(member)
 
 st.header('Laundry Datasets')
 st.dataframe(dataset)
