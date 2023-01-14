@@ -27,7 +27,16 @@ import pickle
 warnings.filterwarnings('ignore')
 
 
-df = pd.read_csv('Data_Cleaned.csv')
+uploaded_file = st.file_uploader("Upload Cleaned CSV file", type="csv")
+
+if uploaded_file:
+    # Do something with the uploaded file
+    df = pd.read_csv(uploaded_file)
+    st.dataframe(df)
+else:
+    df = pd.read_csv('Data_Cleaned.csv')
+
+
 dataset = pd.read_csv('laundry.csv')
 weather = pd.read_csv('weather.csv')
 smote = pd.read_csv('Data_Smote.csv')
