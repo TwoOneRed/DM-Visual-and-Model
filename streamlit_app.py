@@ -868,11 +868,18 @@ st.pyplot(logrsmote)
 ###########################################################################################################################################################################
 ###########################################################################################################################################################################
 
+import os
+
 with open("test.html", "rb") as html_file:
     PDFbyte = html_file.read()
 
-st.download_button(label="Export_Report",
+st.download_button(label="Download_Report",
                     data=PDFbyte,
                     file_name="test.html",
                     mime='application/octet-stream')
+
+
+t = 'test.html'
+if st.button('Email Report'):
+    os.system(f'open -a "Mail" --args -a {t}')
 
