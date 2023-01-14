@@ -69,14 +69,11 @@ with open("Report.html", "rb") as html_file:
 
 st.download_button(label="Download_Report",
                     data=PDFbyte,
-                    file_name="test.html",
+                    file_name="Report.html",
                     mime='application/octet-stream')
 
-
 if st.button('Email Report'):
-    path = 'test.html'
-    webbrowser.open(f'mailto:?attach={path}')
-
+    webbrowser.open(f'mailto:?subject=Laundry Report&body=The file link attach is the link for the laundry report. \n https://github.com/TwoOneRed/DMProject/blob/main/Report.html')
 
 ###########################################################################################################################################################################
 ###########################################################################################################################################################################
