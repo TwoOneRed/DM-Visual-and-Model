@@ -64,6 +64,20 @@ st.dataframe(weather)
 st.header('Cleaned Datasets')
 st.dataframe(df)
 
+with open("Report.html", "rb") as html_file:
+    PDFbyte = html_file.read()
+
+st.download_button(label="Download_Report",
+                    data=PDFbyte,
+                    file_name="test.html",
+                    mime='application/octet-stream')
+
+
+if st.button('Email Report'):
+    path = 'test.html'
+    webbrowser.open(f'mailto:?attach={path}')
+
+
 ###########################################################################################################################################################################
 ###########################################################################################################################################################################
 ###########################################################################################################################################################################
@@ -867,19 +881,3 @@ st.pyplot(logrsmote)
 
 ###########################################################################################################################################################################
 ###########################################################################################################################################################################
-
-import os
-
-with open("test.html", "rb") as html_file:
-    PDFbyte = html_file.read()
-
-st.download_button(label="Download_Report",
-                    data=PDFbyte,
-                    file_name="test.html",
-                    mime='application/octet-stream')
-
-
-t = 'test.html'
-if st.button('Email Report'):
-    os.system(f'open -a "Mail" --args -a {t}')
-
