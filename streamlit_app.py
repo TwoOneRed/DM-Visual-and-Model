@@ -19,6 +19,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_curve, roc_auc_score
 
+from imblearn.over_sampling import SMOTE
 from xgboost import XGBClassifier
 from mlxtend.frequent_patterns import fpgrowth, association_rules
 import webbrowser
@@ -43,12 +44,31 @@ else:
 
 dataset = pd.read_csv('laundry.csv')
 weather = pd.read_csv('weather.csv')
-smote = pd.read_csv('Data_Smote.csv')
 
 df_encode = df.copy()
 df_encode = df_encode.apply(LabelEncoder().fit_transform)
 
 df_onehot = df.copy()
+
+smote_X = df_encode.loc[:, df_encode.columns != 'buyDrink']
+smote_y = df_encode.loc[:, df_encode.columns == 'buyDrink']
+
+# construct the SMOTE model
+os = SMOTE(random_state=42)
+
+# train-test-split with test size 30% and random state=10
+X_train, X_test, y_train, y_test = train_test_split(smote_X, smote_y.values.ravel(), test_size = 0.3, random_state=10)
+columns = X_train.columns
+
+# fit the smote model with training data only
+os_data_X, os_data_y = os.fit_resample(X_train, y_train)
+
+# change to dataframe
+os_data_X = pd.DataFrame(data=os_data_X,columns=columns )
+os_data_y = pd.DataFrame(data=os_data_y,columns=['buyDrink'])
+
+smote = pd.concat([os_data_X, os_data_y], axis=1)
+
 
 col_vars = [col for col in df_onehot.columns.tolist() if df_onehot[col].dtype.name == "object"]
 
