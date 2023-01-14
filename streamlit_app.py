@@ -133,13 +133,7 @@ st.dataframe(sm.stats.anova_lm(model, typ=2))
 st.subheader('Question 3')
 st.text('Any correlations between weather information and number of people buying drinks?')
 
-q3 = df[['temp', 'humidity', 'windspeed','cloudcover', 'visibility', 'buyDrink']].reset_index(drop=True)
-
-q3plt = plt.figure(figsize=(7,5))
-ax = sns.pairplot(q3, hue ='buyDrink')
-ax.fig.suptitle("The relationships between weather and number of prople buying drinks")
-
-st.pyplot(q3plt)
+st.image('pairplot.png', caption='My Image', use_column_width=True)
 
 ##########################################################################################################################################################
 #QUESTION 4
